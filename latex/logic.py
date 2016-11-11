@@ -1,5 +1,4 @@
-from minimization import get_minterms, minimize, to_bin
-from minimization.flip_flops import JK
+from minimization import JK, get_minterms, minimize, to_bin
 from .parts import gen_header, gen_tabular, multicolumn, overline, split, subscript
 
 fields = [0, 1, 3, 2, 4, 5, 7, 6, 12, 13, 15, 14, 8, 9, 11, 10]
@@ -103,7 +102,7 @@ def gen_flip_flop(moves, f_f, num):
     it_gray = gen_gray()
     it_con = split(content)
     rows = [
-        [multicolumn(5, subscript(f_f, num))],
+        [multicolumn(5, subscript(f_f.name, num))],
         (gen_header(), *gen_gray()),
         (next(it_gray), *next(it_con)),
         (next(it_gray), *next(it_con)),
@@ -126,8 +125,8 @@ def change_negation(function):
 def generate_function(moves, f_f, num):
     data = gen_flip_flop_content(moves, f_f, num)
     minterms, dontcares = get_minterms(data)
-    signals = ['Z', subscript('Q', 2, True), subscript('Q', 1, True), subscript('Q', 0, True)]
+    signals = ['Z', *(subscript('Q', i, True) for i in '210')]
     minimized = minimize(minterms, dontcares, signals)
     changed = change_negation(minimized)
-    function = '${} = {}$'.format(subscript(f_f, num, True), changed)
+    function = '${} = {}$'.format(subscript(f_f.name, num, True), changed)
     return function

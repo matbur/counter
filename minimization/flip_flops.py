@@ -7,6 +7,12 @@
 """
 
 
+def add_name(func):
+    func.name = func.__name__
+    return func
+
+
+@add_name
 def J(t, u):
     """ JK flip-flop
         t|u|J
@@ -22,6 +28,7 @@ def J(t, u):
     return (u, '*')[t]
 
 
+@add_name
 def K(t, u):
     """ JK flip-flop
         t|u|K
