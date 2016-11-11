@@ -1,5 +1,5 @@
 from latex import file_footer, file_header, gen_bin_moves, gen_flip_flop, gen_flip_flops, gen_moves, generate_function
-from minimization import complete_moves
+from minimization import J, K, complete_moves
 
 
 def main():
@@ -33,26 +33,26 @@ def main():
         gen_bin_moves(moves),
         gen_flip_flops(moves),
         '',
-        gen_flip_flop(full_moves, 'J', 2),
-        gen_flip_flop(full_moves, 'K', 2),
+        gen_flip_flop(full_moves, J, 2),
+        gen_flip_flop(full_moves, K, 2),
         '',
-        generate_function(full_moves, 'J', 2),
+        generate_function(full_moves, J, 2),
         '',
-        generate_function(full_moves, 'K', 2),
+        generate_function(full_moves, K, 2),
         '',
-        gen_flip_flop(full_moves, 'J', 1),
-        gen_flip_flop(full_moves, 'K', 1),
+        gen_flip_flop(full_moves, J, 1),
+        gen_flip_flop(full_moves, K, 1),
         '',
-        generate_function(full_moves, 'J', 1),
+        generate_function(full_moves, J, 1),
         '',
-        generate_function(full_moves, 'K', 1),
+        generate_function(full_moves, K, 1),
         '',
-        gen_flip_flop(full_moves, 'J', 0),
-        gen_flip_flop(full_moves, 'K', 0),
+        gen_flip_flop(full_moves, J, 0),
+        gen_flip_flop(full_moves, K, 0),
         '',
-        generate_function(full_moves, 'J', 0),
+        generate_function(full_moves, J, 0),
         '',
-        generate_function(full_moves, 'K', 0),
+        generate_function(full_moves, K, 0),
         '',
         file_footer
     ])

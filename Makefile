@@ -1,4 +1,4 @@
-file.pdf: file.tex latex.py
+file.pdf: file.tex
 	#python main.py
 	pdflatex file.tex
 

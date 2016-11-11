@@ -1,6 +1,6 @@
 import unittest
 
-from latex import gen_row, multicolumn, subscript
+from latex_old import gen_row, multicolumn, subscript
 
 
 class TestLatex(unittest.TestCase):

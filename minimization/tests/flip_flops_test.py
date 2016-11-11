@@ -1,6 +1,6 @@
 import unittest
 
-from flip_flops import D, J, JK, K, T
+from minimization.flip_flops import D, J, JK, K, T
 
 
 class TestFlipFlops(unittest.TestCase):
