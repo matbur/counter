@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>matbur's minimalizer</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
 </head>
 <body>
 
@@ -32,7 +33,7 @@
     <p><input type=submit value="SOLVE!">
 </form>
 
-<iframe src="../static/file.pdf" style="width:80%; height:600px;" frameborder="0"></iframe>
+<iframe src="{{ file }}" style="width:80%; height:600px;" frameborder="0"></iframe>
 
 </body>
 </html>

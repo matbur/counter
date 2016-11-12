@@ -31,7 +31,7 @@ def parse_key(key):
 
 
 def parse_form(data):
-    print(data)
+    print(sorted(data))
     l = []
     for k, v in data.items():
         if v:
@@ -41,8 +41,8 @@ def parse_form(data):
     return l
 
 
-def get_pdf(data):
-    file = 'static/file.tex'
+def get_pdf(data, file):
+    file += '.tex'
     moves = parse_form(data)
     create_tex_file(moves, file)
     create_pdf_file(file)
@@ -50,14 +50,17 @@ def get_pdf(data):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    ip = 'static/' + request.remote_addr
     form = MovesForm(request.form)
     if request.method == 'POST' and form.validate():
-        get_pdf(form.data)
-        flash(sorted(form.data.items())[:8])
-        flash(sorted(form.data.items())[8:])
-        flash(parse_form(form.data))
+        data = form.data
+        if any(data.values()):
+            get_pdf(data, ip)
+            flash(parse_form(form.data))
+        else:
+            flash('Serio?')
         return redirect(url_for('index'))
-    return render_template('index.html', form=form)
+    return render_template('index.html', form=form, file=ip + '.pdf')
 
 
 if __name__ == '__main__':
