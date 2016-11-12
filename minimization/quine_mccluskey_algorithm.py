@@ -1,3 +1,8 @@
+""" Module contains functions to run Quine-McCluskey algorithm.
+    more information:  https://en.wikipedia.org/wiki/Quine-McCluskey_algorithm
+"""
+
+
 def merge(this, other):
     """ Functions merges two minters to one similar.
 
@@ -5,9 +10,7 @@ def merge(this, other):
     :param other: 2nd minterm
     :return: merged minterm
     """
-    merged = []
-    for i, j in zip(this, other):
-        merged.append(('-', i)[i == j])
+    merged = (('-', i)[i == j] for i, j in zip(this, other))
     return ''.join(merged)
 
 
@@ -18,7 +21,8 @@ def like(this, other):
     :param other: 2nd minterm
     :return: bool
     """
-    return sum(i != j for i, j in zip(this, other)) == 1
+    differences = (i != j for i, j in zip(this, other))
+    return sum(differences) == 1
 
 
 def get_unused(implicants, used):
@@ -28,10 +32,6 @@ def get_unused(implicants, used):
     :param used: set of implicants which were used
     :return: set of unused implicants
     """
-    # print('gen_numbers')
-    # print('\timplicants', implicants)
-    # print('\tused', used)
-
     implicants_set = set(sum(implicants, []))
     return implicants_set - used
 
@@ -42,9 +42,6 @@ def step(minterms):
     :param minterms: list of implicants
     :return: tuple containing list of implicants and used implicants
     """
-    # print('step')
-    # print('\tminterms', minterms)
-
     result = []
     used = set()
     for i, j in zip(minterms, minterms[1:]):
@@ -64,36 +61,29 @@ def group(minterms):
     :param minterms: list of items to group
     :return: grouped list of lists
     """
-    # print('group')
-    # print('\tminterms', minterms)
-
     if not minterms:
         return []
 
     first = minterms[0]
     size = len(first) - first.count('-') + 1
     grouped = [[] for _ in range(size)]
-    for i in minterms:
-        n = i.count('1')
-        if i in grouped[n]:
+    for minterm in minterms:
+        num = minterm.count('1')
+        if minterm in grouped[num]:
             continue
-        grouped[n].append(i)
+        grouped[num].append(minterm)
     return grouped
 
 
-def Quine_McCluskey_method(minterms):
-    """
+def quine_mccluskey_algorithm(minterms):
+    """ Function runs algorithm.
 
-    :param minterms:
-    :return:
+    :param minterms: list of minterms
+    :return: set of unused minterms
     """
-    # print('Quine_McCluskey_method')
-    # print('\tminterms', minterms)
-
     unused = set()
     for _ in range(5):
         minterms = group(minterms)
         minterms, used = step(minterms)
         unused |= get_unused(*used)
-        # print('unused', unused)
     return unused

@@ -1,6 +1,7 @@
 """ Module contains functions to minimize boolean function
-    with method Quine-McCluskey.
+    with Quine-McCluskey algorithm and Petrick's method.
 """
+
 from .common import *
 from .flip_flops import *
 from .petricks_method import *
@@ -21,6 +22,6 @@ def minimize(minterms, dontcares, signals):
         return '1'
 
     united_minterms = [to_bin(i, 4) for i in minterms + dontcares]
-    unused_implicants = Quine_McCluskey_method(united_minterms)
+    unused_implicants = quine_mccluskey_algorithm(united_minterms)
     minimized = Petricks_method(unused_implicants, minterms)
     return get_function(minimized, signals)

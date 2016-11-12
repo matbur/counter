@@ -1,6 +1,3 @@
-fields = [0, 1, 3, 2, 4, 5, 7, 6, 12, 13, 15, 14, 8, 9, 11, 10]
-
-
 def to_bin(value, width=3):
     """ Function generates formatted int to bin.
 
@@ -40,10 +37,6 @@ def get_signal(implicant, index, signal):
     :param signal: name of signal
     :return: proper signal symbol
     """
-    # print('get_signal')
-    # print('\timplicant', implicant)
-    # print('\tindex', index)
-    # print('\tsignal', signal)
     if implicant[index] == '-':
         return ''
     if implicant[index] == '0':
@@ -51,17 +44,15 @@ def get_signal(implicant, index, signal):
     return signal
 
 
-def get_minterm(implicant, signals):
+def get_implicant(implicant, signals):
     """
 
     :param implicant:
     :param signals: names of signals
-    :return:
+    :return: implicant with names of signals
     """
-    # print('get_minterm')
-    # print('\timplicant', implicant)
-    # print('\tsignals', signals)
-    return ''.join(get_signal(implicant, i, v) for i, v in enumerate(signals))
+    return ''.join(get_signal(implicant, i, v)
+                   for i, v in enumerate(signals))
 
 
 def get_function(implicants, signals):
@@ -72,26 +63,29 @@ def get_function(implicants, signals):
     :return: boolean function
     """
 
-    # print('get_function')
-    # print('\timplicants', implicants)
-    # print('\tsignals', signals)
-
-    def sort_key(x):
-        return ['10-'.index(i) for i in x]
+    def sort_key(text):
+        return ['10-'.index(sign) for sign in text]
 
     sorted_implicants = sorted(implicants, key=sort_key)
-    return ' + '.join(get_minterm(i, signals) for i in sorted_implicants)
+    return ' + '.join(get_implicant(i, signals)
+                      for i in sorted_implicants)
 
 
-def get_minterms(data):
+def get_minterms(data, order):
+    """ Function divides list of signals into minterms and dontcares.
+
+    :param data: input signals
+    :param order: order in which the data come
+    :return: lists of minterms and dontcares
+    """
     minterms = []
     dontcares = []
-    list_map = {
+    lists = {
         1: minterms,
         '*': dontcares,
         0: []
     }
-    for i, v in zip(fields, data):
-        list_map[v].append(i)
+    for ind, value in zip(order, data):
+        lists[value].append(ind)
 
     return minterms, dontcares

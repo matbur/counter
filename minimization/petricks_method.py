@@ -1,10 +1,14 @@
+""" Module contains functions to run Petrick's method.
+    more information: https://en.wikipedia.org/wiki/Petrick%27s_method
+"""
+
 from .common import to_bin
 
 
 def gen_numbers(implicant):
-    """
+    """ Generator yields all possible numbers from given implicant.
 
-    :param implicant:
+    :param implicant: implicant to spread
     """
     num = implicant.count('-')
     for i in range(1 << num):
@@ -15,11 +19,11 @@ def gen_numbers(implicant):
 
 
 def join(this, other):
-    """
+    """ Function changes 2 lists into list of sets.
 
-    :param this:
-    :param other:
-    :return:
+    :param this: 1st implicant or set of implicants
+    :param other: 2nd implicant or set of implicants
+    :return: list of joined implicants
     """
     joined = []
     for i in this:
@@ -32,11 +36,11 @@ def join(this, other):
 
 
 def group_implicants(imp_num, minterms):
-    """
+    """ Function groups implicants to corresponding minterms.
 
-    :param imp_num:
-    :param minterms:
-    :return:
+    :param imp_num: list of tuples (implicant, number)
+    :param minterms: list of minterms
+    :return: list of grouped minterms
     """
     grouped = {}
     for term in minterms:
@@ -45,13 +49,13 @@ def group_implicants(imp_num, minterms):
             if num != to_bin(term, 4):
                 continue
             grouped[term].append(imp)
-    return list(grouped.values())
+    return grouped.values()
 
 
 def pair_implicants(implicants):
-    """
+    """ Generator yields pairs of implicant with matching number.
 
-    :param implicants:
+    :param implicants: list of implicants
     """
     for imp in implicants:
         for num in gen_numbers(imp):
@@ -59,21 +63,14 @@ def pair_implicants(implicants):
 
 
 def Petricks_method(unused, minterms):
-    """
+    """ Function runs algorithm.
 
-    :param unused:
-    :param minterms:
-    :return:
+    :param unused: set of unused implicants
+    :param minterms: list of minterms
+    :return: set of minimized implicants
     """
-    # print('Petricks_method')
-    # print('\tunused =', unused)
-    # print('\tminterms =', minterms)
-
     pairs = tuple(pair_implicants(unused))
-    # print('pairs =', pairs)
-
-    results = group_implicants(pairs, minterms)
-    # print('results', results)
+    results = list(group_implicants(pairs, minterms))
 
     while len(results) != 1:
         results = [join(i, j) for i, j in zip(results, results[1:])]
