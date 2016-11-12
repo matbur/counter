@@ -13,6 +13,7 @@ def to_bin(value, width=3):
     return '{0:0>{1}b}'.format(value, width)
 
 
+# TODO: what if we do not have Z signal?
 def complete_moves(moves):
     """ Function fills missing moves with '*'.
 

@@ -1,7 +1,17 @@
 from minimization import JK, get_minterms, minimize, to_bin
-from .parts import gen_header, gen_tabular, multicolumn, overline, split, subscript
+from .parts import begin_tabular, end_tabular, gen_header, hline, multicolumn, overline, subscript
 
 fields = [0, 1, 3, 2, 4, 5, 7, 6, 12, 13, 15, 14, 8, 9, 11, 10]
+
+
+def split(lst, width=4):
+    """ Generator yields lst in parts.
+
+    :param lst: list of elements
+    :param width: length of each part
+    """
+    for i in range(len(lst) // width):
+        yield lst[width * i:width * (i + 1)]
 
 
 def gen_gray(width=2):
@@ -10,8 +20,33 @@ def gen_gray(width=2):
     :param width: number of bits
     """
     for i in range(1 << width):
-        g = i ^ (i >> 1)
-        yield '{0:0>{1}b}'.format(g, width)
+        gray = i ^ (i >> 1)
+        yield '{0:0>{1}b}'.format(gray, width)
+
+
+def gen_row(row):
+    """ Function transforms list of items to one row from Latex.
+
+    :param row: list of items
+    :return: merged row
+    """
+    row = map(str, row)
+    return ' & '.join(row) + r' \\'
+
+
+def gen_tabular(rows, sep=' '):
+    """ Function combines all parts of table.
+
+    :param rows: list of rows
+    :param sep: separator between rows
+    :return: string, merged table
+    """
+    n = max(len(row) for row in rows)
+    s = [begin_tabular(n),
+         *(gen_row(row) for row in rows),
+         end_tabular]
+    # sep = '\n'
+    return '{0}{1}{0}'.format(sep, hline).join(s)
 
 
 def gen_flip_flop_content(moves, f_f, num):
@@ -31,8 +66,8 @@ def gen_flip_flop_content(moves, f_f, num):
     return content
 
 
-def gen_moves(moves):
-    """ Function generates table of moves with 2 or 3 column
+def gen_moves_table(moves):
+    """ Function generates table of moves with 2 or 3 column.
 
     :param moves: list of moves
     :return: string containing whole table
@@ -50,8 +85,8 @@ def gen_moves(moves):
     return gen_tabular(rows)
 
 
-def gen_bin_moves(moves):
-    """ Function generates table of moves in binary system with 2 or 3 column
+def gen_bin_moves_table(moves):
+    """ Function generates table of moves in binary system with 2 or 3 column.
 
     :param moves: list of moves
     :return: string containing whole table
@@ -70,8 +105,8 @@ def gen_bin_moves(moves):
     return gen_tabular(rows)
 
 
-def gen_flip_flops(moves):
-    """ Function generates table of JK flip-flops according to moves
+def gen_all_flip_flops_table(moves):
+    """ Function generates table of JK flip-flops according to moves.
 
     :param moves: list of moves
     :return: string containing whole table
@@ -88,8 +123,8 @@ def gen_flip_flops(moves):
     return gen_tabular(rows)
 
 
-def gen_flip_flop(moves, f_f, num):
-    """ Function generates table ready to minimize
+def gen_flip_flop_table(moves, f_f, num):
+    """ Function generates table ready to minimize.
 
     :param moves: list of moves
     :param f_f: type of flip-flop
@@ -115,14 +150,26 @@ def gen_flip_flop(moves, f_f, num):
     return gen_tabular(rows)
 
 
-def change_negation(function):
-    l = function.split('/')
+def change_negation(expression):
+    """ Function changes sign / to overline.
+
+    :param expression: boolean expression as string
+    :return: changed expression
+    """
+    l = expression.split('/')
     for i, v in enumerate(l[1:], 1):
         l[i] = overline(v[0], True) + v[1:]
     return ''.join(l)
 
 
-def generate_function(moves, f_f, num):
+def gen_boolean_function(moves, f_f, num):
+    """ Function generates boolean function from given moves.
+
+    :param moves: list of movements
+    :param f_f: flip-flop function
+    :param num: number of flip-flop
+    :return: minimized boolean function in Latex syntax
+    """
     data = gen_flip_flop_content(moves, f_f, num)
     minterms, dontcares = get_minterms(data)
     signals = ['Z', *(subscript('Q', i, True) for i in '210')]

@@ -1,6 +1,6 @@
 import unittest
 
-from minimization import gen_Gray, group, like, merge, to_bin
+from minimization import group, like, merge, to_bin
 
 
 class TestMinimization(unittest.TestCase):
@@ -9,12 +9,6 @@ class TestMinimization(unittest.TestCase):
         self.assertEqual(to_bin(0), '000')
         self.assertEqual(to_bin(1), '001')
         self.assertEqual(to_bin(2, 4), '0010')
-
-    def test_gen_Gray(self):
-        self.assertEqual(list(gen_Gray()), ['00', '01', '11', '10'])
-        self.assertEqual(list(gen_Gray(0)), ['0'])
-        self.assertEqual(list(gen_Gray(1)), ['0', '1'])
-        self.assertEqual(list(gen_Gray(2)), ['00', '01', '11', '10'])
 
     def test_group(self):
         self.assertEqual(group([]), [])

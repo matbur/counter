@@ -1,6 +1,6 @@
 file.pdf: file.tex
-	#python main.py
-	pdflatex file.tex
+	pdflatex file.tex 1>/dev/null
+	rm file.log file.aux
 
 
 .PHONY: clean
