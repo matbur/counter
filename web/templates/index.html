@@ -1,17 +1,38 @@
+{% from "_helpers.html" import render_field, get_flash %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>matbur's minimalizer</title>
 </head>
 <body>
 
-<h1>form</h1>
-<form method="POST" action="">
-    {{ form.csrf_token }}
-    {{ form.name.label }} {{ form.name(size=20) }}
-    <input type="submit" value="Go">
+{{ get_flash() }}
+
+<form method=post action="/">
+    <dl>
+        {{ render_field(form.move_0_0) }}
+        {{ render_field(form.move_0_1) }}
+        {{ render_field(form.move_0_2) }}
+        {{ render_field(form.move_0_3) }}
+        {{ render_field(form.move_0_4) }}
+        {{ render_field(form.move_0_5) }}
+        {{ render_field(form.move_0_6) }}
+        {{ render_field(form.move_0_7) }}
+        {{ render_field(form.move_1_0) }}
+        {{ render_field(form.move_1_1) }}
+        {{ render_field(form.move_1_2) }}
+        {{ render_field(form.move_1_3) }}
+        {{ render_field(form.move_1_4) }}
+        {{ render_field(form.move_1_5) }}
+        {{ render_field(form.move_1_6) }}
+        {{ render_field(form.move_1_7) }}
+    </dl>
+    <p><input type=submit value="SOLVE!">
 </form>
+
+<iframe src="../static/file.pdf" style="width:80%; height:600px;" frameborder="0"></iframe>
 
 </body>
 </html>

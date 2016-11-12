@@ -18,6 +18,7 @@ def complete_moves(moves):
     :return: completed, sorted list of moves
     """
     filled = list(moves)
+
     missing = set(range(8)) - set(i[-2] for i in filled)
     if len(moves[0]) == 3:
         for i in missing:
@@ -26,6 +27,14 @@ def complete_moves(moves):
     else:
         for i in missing:
             filled.append((i, '*'))
+
+    d = {i[:2] for i in filled}
+    a = {(i, j) for i in range(2) for j in range(8)}
+    for _, t, u in list(filled):
+        for _, i in a - d:
+            if t != i:
+                continue
+            filled.append((1, t, u))
     return sorted(filled)
 
 

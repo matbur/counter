@@ -1,3 +1,6 @@
+""" Module contains latex parts which are used to create latex file.
+"""
+
 file_header = r"""
 \documentclass[11pt]{article}
 
@@ -58,5 +61,3 @@ def multicolumn(width: int, value=''):
     :return: string
     """
     return r'\multicolumn{{{}}}{{|c|}}{{{}}}'.format(width, value)
-
-

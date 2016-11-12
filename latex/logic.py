@@ -1,3 +1,6 @@
+""" Module contains logic to create latex file.
+"""
+
 from minimization import JK, get_minterms, minimize, to_bin
 from .parts import begin_tabular, end_tabular, gen_header, hline, multicolumn, overline, subscript
 
