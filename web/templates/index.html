@@ -33,7 +33,10 @@
     <p><input type=submit value="SOLVE!">
 </form>
 
-<iframe src="{{ file }}" style="width:80%; height:600px;" frameborder="0"></iframe>
+<a href="{{ url_for('get_tex_file') }}">Download TEX file</a>
+<a href="{{ url_for('get_pdf_file') }}">Download PDF file</a>
+
+<img src="{{ url_for('get_jpg_file') }}" alt="here will be an image" width="100%">
 
 </body>
 </html>
