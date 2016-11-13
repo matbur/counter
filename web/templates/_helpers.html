@@ -12,9 +12,10 @@
 {% endmacro %}
 
 
-{% macro get_flash() %}
+{% macro get_flash(header='') %}
     {% with messages = get_flashed_messages() %}
         {% if messages %}
+            <span>{{ header }}</span>
             <ul class=flashes>
                 {% for message in messages %}
                     <li>{{ message }}</li>
