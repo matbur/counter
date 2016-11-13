@@ -11,14 +11,15 @@ def create_tex_file_content(moves):
 
     :param moves: list of tuples (Z, from, to)
     """
+    sorted_moves = sorted(moves)
     full_moves = complete_moves(moves)
 
     to_write = (
         file_header,
         '',
-        gen_moves_table(moves),
-        gen_bin_moves_table(moves),
-        gen_all_flip_flops_table(moves),
+        gen_moves_table(sorted_moves),
+        gen_bin_moves_table(sorted_moves),
+        gen_all_flip_flops_table(sorted_moves),
         '',
         gen_flip_flop_table(full_moves, J, 2),
         gen_flip_flop_table(full_moves, K, 2),
