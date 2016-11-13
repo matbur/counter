@@ -23,6 +23,7 @@
 <span>Z | q(t) | q(t+1)</span>
 
 <form method=post action="/">
+    <p><input type=submit value="SOLVE!">
     <dl>
         {{ render_field(form.move_0_0) }}
         {{ render_field(form.move_0_1) }}
@@ -44,8 +45,8 @@
     <p><input type=submit value="SOLVE!">
 </form>
 
-<a href="{{ url_for('get_tex_file') }}">Download TEX file</a>
-<a href="{{ url_for('get_pdf_file') }}">Download PDF file</a>
+<a href="{{ url_for('get_tex_file') }}" target="_blank">Download TEX file</a>
+<a href="{{ url_for('get_pdf_file') }}" target="_blank">Download PDF file</a>
 
 <img src="{{ url_for('get_jpg_file')+ts }}" alt="here will be an image" width="100%">
 
