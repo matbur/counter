@@ -1,5 +1,11 @@
-table {
-    margin: auto;
+.table {
+    float: left;
+    width: calc(50% - 10px);
+    margin-left: 20px;
+}
+
+input + .table {
+    margin-left: 0;
 }
 
 th, td {
@@ -8,8 +14,8 @@ th, td {
 }
 
 input {
-    width: 30px;
     text-align: center;
+    width: 30px;
 }
 
 input.submit {

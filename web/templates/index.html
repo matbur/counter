@@ -26,7 +26,7 @@
     </header>
 
     <div class="row">
-        <div class="col-md-2">
+        <div class="col-md-4">
             <form method="post" id="form1" action="/">
                 <input class="btn btn-default submit" type="submit" value="SOLVE!" form="form1">
                 <table class="table table-striped table-bordered table-condensed">
@@ -75,6 +75,14 @@
                         <td>7</td>
                         <td>{{ form.move_0_7(maxlength=1) }}</td>
                     </tr>
+                </table>
+
+                <table class="table table-striped table-bordered table-condensed">
+                    <tr>
+                        <th>Z</th>
+                        <th>q(t)</th>
+                        <th>q(t+1)</th>
+                    </tr>
                     <tr>
                         <td>1</td>
                         <td>0</td>
@@ -119,7 +127,7 @@
                 <input class="btn btn-default submit" type="submit" value="SOLVE!" form="form1">
             </form>
         </div>
-        <div class="col-md-10">
+        <div class="col-md-8">
             <a class="btn btn-outline-primary"
                href="{{ url_for('get_tex_file')+ts }}"
                target="_blank"
