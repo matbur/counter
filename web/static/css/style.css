@@ -1,0 +1,28 @@
+table {
+    margin: auto;
+}
+
+th, td {
+    text-align: center;
+    width: 50px;
+}
+
+input {
+    width: 30px;
+    text-align: center;
+}
+
+input.submit {
+    width: 100%;
+    margin: 0 0 10px;
+}
+
+.jumbotron {
+    padding-bottom: 1em;
+    padding-top: 1em;
+    margin-top: 1em;
+}
+
+footer {
+    text-align: center;
+}

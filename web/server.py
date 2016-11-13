@@ -1,37 +1,12 @@
-import subprocess
 from time import time
 
-from flask import Flask, flash, render_template, request
+from flask import Flask, render_template, request
 
-from latex import create_pdf_file, create_tex_file
 from moves_form import MovesForm
+from parsers import create_files
 
 app = Flask(__name__)
 app.secret_key = 'very secret key'
-
-
-def parse_key(key):
-    return key.split('_')[1:]
-
-
-def parse_form(data):
-    parsed = []
-    for key, value in data.items():
-        if not value:
-            continue
-        parsed_key = parse_key(key) + [value]
-        parsed.append(tuple(int(i) for i in parsed_key))
-    return parsed
-
-
-def get_pdf(data, file):
-    tex_file = file + '.tex'
-    moves = parse_form(data)
-    print(sorted(moves))
-    create_tex_file(moves, tex_file)
-    create_pdf_file(tex_file)
-    command = 'convert -density 150 {0}.pdf {0}.jpg'.format(file)
-    subprocess.call(command, shell=True)
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -40,12 +15,9 @@ def index():
     form = MovesForm(request.form)
     if request.method == 'POST' and form.validate():
         data = form.data
-
-        if any(data.values()) and all(not i or i.isdigit() for i in data.values()):
-            flash(parse_form(form.data))
-            get_pdf(data, ip)
-        else:
-            flash('Serio?')
+        values = data.values()
+        if any(values) and all(not i or i.isdigit() for i in values):
+            create_files(data, ip)
     return render_template('index.html', form=form, ts='?{}'.format(time()))
 
 
@@ -63,7 +35,7 @@ def get_pdf_file():
 
 @app.route('/file.jpg')
 def get_jpg_file():
-    file = '{}.jpg'.format(request.remote_addr, time())
+    file = '{}.jpg'.format(request.remote_addr)
     return app.send_static_file(file)
 
 

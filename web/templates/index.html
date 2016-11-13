@@ -1,58 +1,148 @@
-{% from "_helpers.html" import render_field, get_flash %}
-
 <!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
     <title>matbur's minimalizer</title>
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static',  filename='css/normalize.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',  filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',  filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',  filename='css/style.css') }}">
 </head>
 <body>
 
-<h1>Pomoc naukowa dla studentów PWr</h1>
-<h2>żeby im się łatwiej pisało sprawka z LUCa i UCiSWa</h2>
-<h3>Tutorial</h3>
-<ol>
-    <li>kolumna #0 (wypełniona) to sygnał sterujący Z</li>
-    <li>kolumna #1 (wypełniona) to stan automatu w czasie t</li>
-    <li>kolumna #2 to stan w jakim automat się znajdzie pod wpływem sygnału Z w następnym cyklu zegarowym</li>
-</ol>
+<div class="container">
+    <header class="row">
+        <div class="jumbotron">
+            <h1>Pomoc naukowa dla studentów PWr EKA</h1>
+            <h4>żeby się łatwiej pisało sprawka z LUCa i UCiSWa</h4>
+            <h5>Tutorial:</h5>
+            <ol>
+                <li>kolumna (wypełniona) to sygnał sterujący Z.</li>
+                <li>kolumna (wypełniona) to stan automatu w czasie t.</li>
+                <li>kolumna to stan w jakim automat się znajdzie pod wpływem sygnału Z w następnym cyklu zegarowym.</li>
+            </ol>
+        </div>
+    </header>
 
-{{ get_flash('Podane przejścia: ') }}
+    <div class="row">
+        <div class="col-md-2">
+            <form method="post" id="form1" action="/">
+                <input class="btn btn-default submit" type="submit" value="SOLVE!" form="form1">
+                <table class="table table-striped table-bordered table-condensed">
+                    <tr>
+                        <th>Z</th>
+                        <th>q(t)</th>
+                        <th>q(t+1)</th>
+                    </tr>
+                    <tr>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>{{ form.move_0_0(maxlength=1) }}</td>
+                    </tr>
+                    <tr>
+                        <td>0</td>
+                        <td>1</td>
+                        <td>{{ form.move_0_1(maxlength=1) }}</td>
+                    </tr>
+                    <tr>
+                        <td>0</td>
+                        <td>2</td>
+                        <td>{{ form.move_0_2(maxlength=1) }}</td>
+                    </tr>
+                    <tr>
+                        <td>0</td>
+                        <td>3</td>
+                        <td>{{ form.move_0_3(maxlength=1) }}</td>
+                    </tr>
+                    <tr>
+                        <td>0</td>
+                        <td>4</td>
+                        <td>{{ form.move_0_4(maxlength=1) }}</td>
+                    </tr>
+                    <tr>
+                        <td>0</td>
+                        <td>5</td>
+                        <td>{{ form.move_0_5(maxlength=1) }}</td>
+                    </tr>
+                    <tr>
+                        <td>0</td>
+                        <td>6</td>
+                        <td>{{ form.move_0_6(maxlength=1) }}</td>
+                    </tr>
+                    <tr>
+                        <td>0</td>
+                        <td>7</td>
+                        <td>{{ form.move_0_7(maxlength=1) }}</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>0</td>
+                        <td>{{ form.move_1_0(maxlength=1) }}</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>{{ form.move_1_1(maxlength=1) }}</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>2</td>
+                        <td>{{ form.move_1_2(maxlength=1) }}</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>3</td>
+                        <td>{{ form.move_1_3(maxlength=1) }}</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>4</td>
+                        <td>{{ form.move_1_4(maxlength=1) }}</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>5</td>
+                        <td>{{ form.move_1_5(maxlength=1) }}</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>6</td>
+                        <td>{{ form.move_1_6(maxlength=1) }}</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>7</td>
+                        <td>{{ form.move_1_7(maxlength=1) }}</td>
+                    </tr>
+                </table>
+                <input class="btn btn-default submit" type="submit" value="SOLVE!" form="form1">
+            </form>
+        </div>
+        <div class="col-md-10">
+            <a class="btn btn-outline-primary"
+               href="{{ url_for('get_tex_file')+ts }}"
+               target="_blank"
+               role="button">Pobierz plik TEX</a>
+            <a class="btn btn-outline-primary"
+               href="{{ url_for('get_pdf_file')+ts }}"
+               target="_blank"
+               role="button">Pobierz plik PDF</a>
+            <img src="{{ url_for('get_jpg_file')+ts }}"
+                 alt="a tutaj będzie wygenerowany plik" style="width: 100%">
+        </div>
+    </div>
+    <div class="row">
+        <footer>Pozdrawiam cieplutko, <a href="mailto:mateusz@burniak.pl">matbur</a>
+            <a href="https://www.facebook.com/kierowca.autobusu.7" target="_blank">
+                <img src="{{ url_for('static', filename='img/facebook.ico') }}">
+            </a>
+        </footer>
+    </div>
+</div>
 
-<span>Z | q(t) | q(t+1)</span>
 
-<form method=post action="/">
-    <p><input type=submit value="SOLVE!">
-    <dl>
-        {{ render_field(form.move_0_0) }}
-        {{ render_field(form.move_0_1) }}
-        {{ render_field(form.move_0_2) }}
-        {{ render_field(form.move_0_3) }}
-        {{ render_field(form.move_0_4) }}
-        {{ render_field(form.move_0_5) }}
-        {{ render_field(form.move_0_6) }}
-        {{ render_field(form.move_0_7) }}
-        {{ render_field(form.move_1_0) }}
-        {{ render_field(form.move_1_1) }}
-        {{ render_field(form.move_1_2) }}
-        {{ render_field(form.move_1_3) }}
-        {{ render_field(form.move_1_4) }}
-        {{ render_field(form.move_1_5) }}
-        {{ render_field(form.move_1_6) }}
-        {{ render_field(form.move_1_7) }}
-    </dl>
-    <p><input type=submit value="SOLVE!">
-</form>
-
-<a href="{{ url_for('get_tex_file') }}" target="_blank">Download TEX file</a>
-<a href="{{ url_for('get_pdf_file') }}" target="_blank">Download PDF file</a>
-
-<img src="{{ url_for('get_jpg_file')+ts }}" alt="here will be an image" width="100%">
-
-<footer>Pozdrawiam cieplutko, <a href="mailto:mateusz@burniak.pl">matbur</a></footer>
-
-<a href="https://github.com/matbur95/counter">
+<a href="https://github.com/matbur95/counter" target="_blank">
     <img style="position: absolute; top: 0; right: 0; border: 0;"
          src="https://camo.githubusercontent.com/652c5b9acfaddf3a9c326fa6bde407b87f7be0f4/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67"
          alt="Fork me on GitHub"
