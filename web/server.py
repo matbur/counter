@@ -1,4 +1,6 @@
-import os, sys
+import os
+import sys
+
 sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/..')
 from time import time
 
@@ -11,14 +13,22 @@ app = Flask(__name__)
 app.secret_key = 'very secret key'
 
 
+def is_all_valid(data):
+    values = data.values()
+
+    def is_valid(item):
+        return not item or item.isdigit()
+
+    return any(values) and all(is_valid(i) for i in values)
+
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     ip = 'static/' + request.remote_addr
     form = MovesForm(request.form)
     if request.method == 'POST' and form.validate():
         data = form.data
-        values = data.values()
-        if any(values) and all(not i or i.isdigit() for i in values):
+        if is_all_valid(data):
             create_files(data, ip)
     return render_template('index.html', form=form, ts='?{}'.format(time()))
 
