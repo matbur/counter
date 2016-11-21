@@ -17,7 +17,7 @@ def is_all_valid(data):
     values = data.values()
 
     def is_valid(item):
-        return not item or item.isdigit()
+        return not item or item in map(str, range(8))
 
     return any(values) and all(is_valid(i) for i in values)
 
