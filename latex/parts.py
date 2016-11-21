@@ -61,3 +61,11 @@ def multicolumn(width: int, value=''):
     :return: string
     """
     return r'\multicolumn{{{}}}{{|c|}}{{{}}}'.format(width, value)
+
+
+def vspace(value: float = 1):
+    """
+
+    :param value:
+    """
+    return r'\vspace{{{:.1f}em}}'.format(value)

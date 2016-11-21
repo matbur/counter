@@ -1,6 +1,6 @@
 import unittest
 
-from latex import begin_tabular, gen_header, multicolumn, overline, subscript
+from latex import begin_tabular, gen_header, multicolumn, overline, subscript, vspace
 
 
 class TestParts(unittest.TestCase):
@@ -24,6 +24,11 @@ class TestParts(unittest.TestCase):
     def test_multicolumn(self):
         self.assertEqual(multicolumn(1, 'v'), r'\multicolumn{1}{|c|}{v}')
         self.assertEqual(multicolumn(2, ''), r'\multicolumn{2}{|c|}{}')
+
+    def test_vspace(self):
+        self.assertEqual(vspace(), r'\vspace{1.0em}')
+        self.assertEqual(vspace(1), r'\vspace{1.0em}')
+        self.assertEqual(vspace(.3), r'\vspace{0.3em}')
 
 
 if __name__ == '__main__':

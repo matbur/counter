@@ -180,3 +180,21 @@ def gen_boolean_function(moves, f_f, num):
     changed = change_negation(minimized)
     function = '${} = {}$'.format(subscript(f_f.name, num, True), changed)
     return function
+
+
+def gen_input_table():
+    rows = (
+        ('', 'Z'),
+        (subscript('z', '0'), 0),
+        (subscript('z', '1'), 1),
+    )
+    return gen_tabular(rows)
+
+
+def gen_output_table():
+    rows = (
+        ('', 'Y'),
+        (subscript('y', '0'), 0),
+        (subscript('y', '1'), 1),
+    )
+    return gen_tabular(rows)

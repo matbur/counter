@@ -23,5 +23,5 @@ def create_files(data, file):
     print(sorted(moves))
     create_tex_file(moves, tex_file)
     create_pdf_file(tex_file)
-    command = 'convert -density 150 {0}.pdf {0}.jpg'.format(file)
+    command = 'convert -density 150 {0}.pdf -append {0}.jpg'.format(file)
     subprocess.call(command, shell=True)
