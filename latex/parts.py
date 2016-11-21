@@ -63,9 +63,21 @@ def multicolumn(width: int, value=''):
     return r'\multicolumn{{{}}}{{|c|}}{{{}}}'.format(width, value)
 
 
-def vspace(value: float = 1):
+def vspace(value=1.):
     """
 
     :param value:
     """
     return r'\vspace{{{:.1f}em}}'.format(value)
+
+
+def minipage(content=()):
+    """
+
+    :param content:
+    """
+    return '\n'.join((
+        r'\begin{minipage}[ht]{.5\textwidth}',
+        *content,
+        r'\end{minipage}'
+    ))
