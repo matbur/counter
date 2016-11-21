@@ -17,14 +17,17 @@ def create_tex_file_content(moves):
     to_write = (
         file_header,
         '',
-        gen_input_table(),
-        gen_output_table(),
+        minipage((
+            gen_input_table(),
+        )),
+        minipage((
+            gen_output_table(),
+        )),
         vspace(), '',
         gen_moves_table(sorted_moves),
         gen_bin_moves_table(sorted_moves),
         gen_all_flip_flops_table(sorted_moves),
-        '',
-        vspace(),
+        vspace(), '',
         minipage((
             gen_flip_flop_table(full_moves, J, 2),
             vspace(.3), '',
@@ -35,8 +38,7 @@ def create_tex_file_content(moves):
             vspace(.3), '',
             gen_boolean_function(full_moves, K, 2),
         )),
-        '',
-        vspace(),
+        vspace(), '',
         minipage((
             gen_flip_flop_table(full_moves, J, 1),
             vspace(.3), '',
