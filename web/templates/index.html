@@ -22,6 +22,8 @@
     </ol>
 </header>
 
+{% include 'flash.html' %}
+
 <div class="container">
     <div class="row">
         <div class="col-md-4">
@@ -36,8 +38,8 @@
                href="{{ url_for('get_pdf_file')+ts }}"
                target="_blank"
                role="button">Pobierz plik PDF</a>
-            <img src="{{ url_for('get_jpg_file')+ts }}"
-                 alt="a tutaj będzie wygenerowany plik" style="width: 100%">
+            <br>
+            <img src="{{ url_for('get_jpg_file')+ts }}" alt="a tutaj będzie wygenerowany plik" style="width: 100%">
         </div>
     </div>
 </div>

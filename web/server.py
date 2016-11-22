@@ -1,26 +1,15 @@
 import os
 import sys
-
-sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/..')
 from time import time
 
 from flask import Flask, render_template, request
 
-from moves_form import MovesForm
-from parsers import create_files
+sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/..')
+from form import MovesForm
+from tools import decide
 
 app = Flask(__name__)
 app.secret_key = 'very secret key'
-
-
-def is_all_valid(data):
-    data = data.copy()
-    values = data.values()
-
-    def is_valid(item):
-        return not item or item in map(str, range(8))
-
-    return any(values) and all(is_valid(i) for i in values)
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -30,8 +19,7 @@ def index():
     if request.method == 'POST' and form.validate():
         data = form.data
         ff_type = data.pop('ff_type')
-        if is_all_valid(data):
-            create_files(data, ff_type, ip)
+        decide(data, ff_type, ip)
     return render_template('index.html', form=form, ts='?{}'.format(time()))
 
 

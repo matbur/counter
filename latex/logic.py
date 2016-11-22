@@ -377,7 +377,7 @@ def create_tex_file_content(moves, f_f):
     return '\n'.join((
         file_header,
         '',
-        subsection('Zakodowane wejsc, wyjsc i stanow'),
+        subsection('Zakodowane wejsc, wyjsc i stanow wewnetrznych'),
         minipage((
             gen_input_table(),
         ), 3),
