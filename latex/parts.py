@@ -11,6 +11,7 @@ file_header = r"""
 file_footer = r'\end{document}'
 
 hline = r'\hline'
+qquad = r'$\qquad$'
 end_tabular = r'\end{tabular}'
 
 
@@ -67,17 +68,29 @@ def vspace(value=1.):
     """
 
     :param value:
+    :return:
     """
     return r'\vspace{{{:.1f}em}}'.format(value)
 
 
-def minipage(content=()):
+def minipage(content=(), num=2):
     """
 
     :param content:
+    :param num:
+    :return:
     """
     return '\n'.join((
-        r'\begin{minipage}[ht]{.5\textwidth}',
+        r'\begin{{minipage}}[ht]{{{:.2f}\textwidth}}'.format(1. / num),
         *content,
         r'\end{minipage}'
     ))
+
+
+def subsection(text=''):
+    """
+
+    :param text:
+    :return:
+    """
+    return r'\subsection{{{}}}'.format(text)

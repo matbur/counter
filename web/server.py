@@ -14,6 +14,7 @@ app.secret_key = 'very secret key'
 
 
 def is_all_valid(data):
+    data = data.copy()
     values = data.values()
 
     def is_valid(item):
@@ -28,8 +29,9 @@ def index():
     form = MovesForm(request.form)
     if request.method == 'POST' and form.validate():
         data = form.data
+        ff_type = data.pop('ff_type')
         if is_all_valid(data):
-            create_files(data, ip)
+            create_files(data, ff_type, ip)
     return render_template('index.html', form=form, ts='?{}'.format(time()))
 
 
@@ -54,5 +56,5 @@ def get_jpg_file():
 if __name__ == '__main__':
     app.run(
         host='0.0.0.0',
-        # debug=True
+        debug=True
     )

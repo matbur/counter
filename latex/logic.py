@@ -77,13 +77,12 @@ def gen_moves_table(moves):
     """
     n = len(moves[0])
     rows = (
-        [multicolumn(n, '')],
         ['t', 't+1'],
         *moves
     )
 
     if n == 3:
-        rows[1].insert(0, 'Z')
+        rows[0].insert(0, 'Z')
 
     return gen_tabular(rows)
 
@@ -108,7 +107,7 @@ def gen_bin_moves_table(moves):
     return gen_tabular(rows)
 
 
-def gen_all_flip_flops_table(moves):
+def gen_jk_flip_flops_table(moves):
     """ Function generates table of JK flip-flops according to moves.
 
     :param moves: list of moves
@@ -122,6 +121,24 @@ def gen_all_flip_flops_table(moves):
     for *_, t, u in moves:
         it = zip(to_bin(t), to_bin(u))
         rows.append(sum([JK(*next(it)) for _ in '210'], ()))
+
+    return gen_tabular(rows)
+
+
+def gen_all_flip_flops_table(moves, f_f):
+    """ Function generates table of JK flip-flops according to moves.
+
+    :param moves: list of moves
+    :return: string containing whole table
+    """
+    rows = [
+        [multicolumn(3, 'Przerzutniki')],
+        [subscript(i, j) for j in '210' for i in f_f.name]
+    ]
+
+    for *_, t, u in moves:
+        it = zip(to_bin(t), to_bin(u))
+        rows.append([f_f(*next(it)) for _ in '210'])
 
     return gen_tabular(rows)
 
@@ -183,6 +200,10 @@ def gen_boolean_function(moves, f_f, num):
 
 
 def gen_input_table():
+    """
+
+    :return:
+    """
     rows = (
         ('', 'Z'),
         (subscript('z', '0'), 0),
@@ -192,9 +213,30 @@ def gen_input_table():
 
 
 def gen_output_table():
+    """
+
+    :return:
+    """
     rows = (
         ('', 'Y'),
         (subscript('y', '0'), 0),
         (subscript('y', '1'), 1),
     )
+    return gen_tabular(rows)
+
+
+def gen_states_table(moves):
+    """
+
+    :param moves:
+    :return:
+    """
+    moves = sorted(set(moves))
+    rows = (
+        [subscript('Q', i) for i in '210'],
+        *[('q{}'.format(i), *to_bin(q)) for i, q in enumerate(moves)]
+    )
+
+    rows[0].insert(0, '')
+
     return gen_tabular(rows)
