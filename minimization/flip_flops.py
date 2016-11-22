@@ -57,10 +57,10 @@ def D(t, u=None):
         0|0
         1|1
     """
-    if u is not None:
-        t = u
-    if t == '*':
+    if '*' in (t, u):
         return '*'
+    if u is not None:
+        return int(u)
     return int(t)
 
 

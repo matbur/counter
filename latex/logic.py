@@ -1,8 +1,9 @@
 """ Module contains logic to create latex file.
 """
 
-from minimization import JK, get_minterms, minimize, to_bin
-from .parts import begin_tabular, end_tabular, gen_header, hline, multicolumn, overline, subscript
+from minimization import D, J, JK, K, T, complete_moves, get_minterms, minimize, to_bin
+from .parts import begin_tabular, end_tabular, file_footer, file_header, gen_header, hline, minipage, multicolumn, \
+    overline, subscript, subsection, vspace
 
 fields = [0, 1, 3, 2, 4, 5, 7, 6, 12, 13, 15, 14, 8, 9, 11, 10]
 
@@ -240,3 +241,155 @@ def gen_states_table(moves):
     rows[0].insert(0, '')
 
     return gen_tabular(rows)
+
+
+def gen_jk_tables(sorted_moves, full_moves):
+    """
+
+    :param sorted_moves:
+    :param full_moves:
+    :return:
+    """
+    return '\n'.join((
+        subsection('Tabela przejsc dla przerzutnikow JK'),
+        gen_bin_moves_table(sorted_moves),
+        gen_jk_flip_flops_table(sorted_moves),
+        vspace(), '',
+        subsection('Minimalizacja metoda Karnough dla przerzutkow JK'),
+        minipage((
+            gen_flip_flop_table(full_moves, J, 2),
+            vspace(.3), '',
+            gen_boolean_function(full_moves, J, 2),
+        )),
+        minipage((
+            gen_flip_flop_table(full_moves, K, 2),
+            vspace(.3), '',
+            gen_boolean_function(full_moves, K, 2),
+        )),
+        vspace(), '',
+        minipage((
+            gen_flip_flop_table(full_moves, J, 1),
+            vspace(.3), '',
+            gen_boolean_function(full_moves, J, 1),
+        )),
+        minipage((
+            gen_flip_flop_table(full_moves, K, 1),
+            vspace(.3), '',
+            gen_boolean_function(full_moves, K, 1),
+        )),
+        vspace(), '',
+        minipage((
+            gen_flip_flop_table(full_moves, J, 0),
+            vspace(.3), '',
+            gen_boolean_function(full_moves, J, 0),
+        )),
+        minipage((
+            gen_flip_flop_table(full_moves, K, 0),
+            vspace(.3), '',
+            gen_boolean_function(full_moves, K, 0),
+        )),
+    ))
+
+
+def gen_d_tables(sorted_moves, full_moves):
+    """
+
+    :param sorted_moves:
+    :param full_moves:
+    :return:
+    """
+    return '\n'.join((
+        subsection('Tabela przejsc dla przerzutkow D'),
+        gen_bin_moves_table(sorted_moves),
+        gen_all_flip_flops_table(sorted_moves, D),
+        vspace(), '',
+        subsection('Minimalizacja metoda Karnough dla przerzutkow D'),
+        minipage((
+            gen_flip_flop_table(full_moves, D, 2),
+            vspace(.3), '',
+            gen_boolean_function(full_moves, D, 2),
+        )),
+        minipage((
+            gen_flip_flop_table(full_moves, D, 1),
+            vspace(.3), '',
+            gen_boolean_function(full_moves, D, 1),
+        )),
+        vspace(), '',
+        minipage((
+            gen_flip_flop_table(full_moves, D, 0),
+            vspace(.3), '',
+            gen_boolean_function(full_moves, D, 0),
+        )),
+    ))
+
+
+def gen_t_tables(sorted_moves, full_moves):
+    return '\n'.join((
+        subsection('Tabela przejsc dla przerzutkow T'),
+        gen_bin_moves_table(sorted_moves),
+        gen_all_flip_flops_table(sorted_moves, T),
+        vspace(), '',
+        subsection('Minimalizacja metoda Karnough dla przerzutkow T'),
+        minipage((
+            gen_flip_flop_table(full_moves, T, 2),
+            vspace(.3), '',
+            gen_boolean_function(full_moves, T, 2),
+        )),
+        minipage((
+            gen_flip_flop_table(full_moves, T, 1),
+            vspace(.3), '',
+            gen_boolean_function(full_moves, T, 1),
+        )),
+        vspace(), '',
+        minipage((
+            gen_flip_flop_table(full_moves, T, 0),
+            vspace(.3), '',
+            gen_boolean_function(full_moves, T, 0),
+        )),
+    ))
+
+
+def create_tex_file_content(moves, f_f):
+    """ Function generates content of tex file from given moves.
+
+    :param moves: list of tuples (Z, from, to)
+    :param f_f: type of flip-flop
+    """
+    ff_map = {
+        'jk': gen_jk_tables,
+        'd': gen_d_tables,
+        't': gen_t_tables
+    }
+    sorted_moves = sorted(moves)
+    full_moves = complete_moves(moves)
+
+    used_moves = [i[1] for i in sorted_moves]
+    print(f_f)
+    print(used_moves)
+
+    to_write = (
+        file_header,
+        '',
+        subsection('Zakodowane wejsc, wyjsc i stanow'),
+        minipage((
+            gen_input_table(),
+        ), 3),
+        minipage((
+            gen_output_table(),
+        ), 3),
+        minipage((
+            gen_states_table(used_moves),
+        ), 3),
+        vspace(), '',
+
+        subsection('Zakodowane przejscia stanow'),
+        gen_moves_table(sorted_moves),
+        vspace(2), '',
+
+        ff_map[f_f](sorted_moves, full_moves),
+        vspace(2), '',
+
+        file_footer
+    )
+
+    return '\n'.join(to_write)

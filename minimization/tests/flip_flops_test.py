@@ -67,11 +67,27 @@ class TestFlipFlops(unittest.TestCase):
     def test_D_for_int(self):
         self.assertEqual(D(0), 0)
         self.assertEqual(D(1), 1)
+        self.assertEqual(D(0, 0), 0)
+        self.assertEqual(D(0, 1), 1)
+        self.assertEqual(D(1, 0), 0)
+        self.assertEqual(D(1, 1), 1)
+        self.assertEqual(D('*', 0), '*')
+        self.assertEqual(D(0, '*'), '*')
+        self.assertEqual(D('*', 1), '*')
+        self.assertEqual(D(1, '*'), '*')
 
     def test_D_for_string(self):
         self.assertEqual(D('0'), 0)
         self.assertEqual(D('1'), 1)
         self.assertEqual(D('*'), '*')
+        self.assertEqual(D('0', '0'), 0)
+        self.assertEqual(D('0', '1'), 1)
+        self.assertEqual(D('1', '0'), 0)
+        self.assertEqual(D('1', '1'), 1)
+        self.assertEqual(D('*', '0'), '*')
+        self.assertEqual(D('0', '*'), '*')
+        self.assertEqual(D('*', '1'), '*')
+        self.assertEqual(D('1', '*'), '*')
 
     def test_T_for_int(self):
         self.assertEqual(T(0, 0), 0)
