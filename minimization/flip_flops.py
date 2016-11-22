@@ -50,17 +50,21 @@ def JK(t, u):
     return J(t, u), K(t, u)
 
 
-def D(t):
+@add_name
+def D(t, u=None):
     """ D flip-flop
         t|D
         0|0
         1|1
     """
-    if t == '*':
+    if '*' in (t, u):
         return '*'
+    if u is not None:
+        return int(u)
     return int(t)
 
 
+@add_name
 def T(t, u):
     """ T flip-flop
         t|u|T

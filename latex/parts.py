@@ -11,6 +11,7 @@ file_header = r"""
 file_footer = r'\end{document}'
 
 hline = r'\hline'
+qquad = r'$\qquad$'
 end_tabular = r'\end{tabular}'
 
 
@@ -26,7 +27,7 @@ def overline(text, isinside=False):
 
 
 def subscript(big, small, isinside=False):
-    """ Function returns proper syntax for subscript.
+    """ Function generatex syntax for subscript.
 
     :param big: value which should be up and big
     :param small: value which should be down and small
@@ -39,16 +40,16 @@ def subscript(big, small, isinside=False):
 def gen_header():
     """ Function generates header for flip-flop table.
 
-    :return: common table header
+    :return: string in Latex syntax
     """
     return 'Z{} / {}{}'.format(subscript('Q', 2), subscript('Q', 1), subscript('Q', 0))
 
 
 def begin_tabular(width: int):
-    """ Function returns opening tag for table.
+    """ Function generates opening tag for table.
 
     :param width: number of column in table
-    :return: string which starts table
+    :return: string in Latex syntax
     """
     return r'\begin{tabular}{|' + 'c|' * width + '}'
 
@@ -58,26 +59,38 @@ def multicolumn(width: int, value=''):
 
     :param width: number of merged columns
     :param value: text in merged columns
-    :return: string
+    :return: string in Latex syntax
     """
     return r'\multicolumn{{{}}}{{|c|}}{{{}}}'.format(width, value)
 
 
-def vspace(value=1.):
+def vspace(width=1.):
+    """ Function generates syntax for vertical space.
+
+    :param width: numerical value of space
+    :return: string in Latex syntax
     """
-
-    :param value:
-    """
-    return r'\vspace{{{:.1f}em}}'.format(value)
+    return r'\vspace{{{:.1f}em}}'.format(width)
 
 
-def minipage(content=()):
-    """
+def minipage(content=(), num=2):
+    """ Function generates syntax for minipage.
 
-    :param content:
+    :param content: text inside minipage
+    :param num: number of minipages
+    :return: string in Latex syntax
     """
     return '\n'.join((
-        r'\begin{minipage}[ht]{.5\textwidth}',
+        r'\begin{{minipage}}[ht]{{{:.2f}\textwidth}}'.format(1. / num),
         *content,
         r'\end{minipage}'
     ))
+
+
+def subsection(text=''):
+    """ Function generates syntax for subsection.
+
+    :param text: content of subsection
+    :return: string in Latex syntax
+    """
+    return r'\subsection{{{}}}'.format(text)

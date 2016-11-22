@@ -95,5 +95,8 @@
             <td>{{ form.move_1_7(maxlength=1) }}</td>
         </tr>
     </table>
+    {% for subfield in form.ff_type %}
+        {{ subfield }} {{ subfield.label }}
+    {% endfor %}
     <input class="btn btn-default submit" type="submit" value="SOLVE!" form="form1">
 </form>

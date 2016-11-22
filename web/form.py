@@ -1,4 +1,4 @@
-from wtforms import Form, StringField
+from wtforms import Form, RadioField, StringField
 
 
 class MovesForm(Form):
@@ -18,3 +18,5 @@ class MovesForm(Form):
     move_1_5 = StringField()
     move_1_6 = StringField()
     move_1_7 = StringField()
+    ff_type = RadioField(default='jk',
+                         choices=(('jk', 'JK'), ('d', 'D'), ('t', 'T')))

@@ -21,7 +21,7 @@ def main():
     ]
 
     file = 'file.tex'
-    create_tex_file(moves, file)
+    create_tex_file(moves, 'jk', file)
     create_pdf_file(file)
 
 
