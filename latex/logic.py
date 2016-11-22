@@ -219,7 +219,7 @@ def gen_boolean_function(moves, f_f, num):
     """
     data = gen_flip_flop_content(moves, f_f, num)
     minterms, dontcares = get_minterms(data, fields)
-    signals = ['$Z$', *(subscript('Q', i, True) for i in '210')]
+    signals = ['Z', *(subscript('Q', i, True) for i in '210')]
     minimized = minimize(minterms, dontcares, signals)
     changed = change_negation(minimized)
     function = '${} = {}$'.format(subscript(f_f.name, num, True), changed)
