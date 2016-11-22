@@ -6,7 +6,7 @@ def to_bin(value, width=3):
     :return: formatted bin number
     """
     if value == '*':
-        return '***'
+        return '*' * width
     return '{0:0>{1}b}'.format(value, width)
 
 
@@ -39,22 +39,22 @@ def complete_moves(moves):
 
 
 def get_signal(implicant, index, signal):
-    """
+    """ Function generates positive, negative or none signal.
 
     :param implicant:
     :param index: index of signal
     :param signal: name of signal
     :return: proper signal symbol
     """
-    if implicant[index] == '-':
-        return ''
-    if implicant[index] == '0':
-        return '/' + signal
-    return signal
+    return {
+        '-': '',
+        '0': '/' + signal,
+        '1': signal
+    }[implicant[index]]
 
 
 def get_implicant(implicant, signals):
-    """
+    """ Function generates positive, negative or none signal.
 
     :param implicant:
     :param signals: names of signals
