@@ -105,7 +105,7 @@ def gen_moves_table(moves):
     n = len(moves[0])
     rows = (
         ['t', 't+1'],
-        *((*z, 'q{}'.format(t), 'q{}'.format(u)) for *z, t, u in moves)
+        *((*z, subscript('q', t), subscript('q', u)) for *z, t, u in moves)
     )
 
     if n == 3:
