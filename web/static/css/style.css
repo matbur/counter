@@ -1,3 +1,12 @@
+.navbar {
+    margin: 0;
+    border-radius: 0;
+}
+
+h1 {
+    font-size: 3em !important;
+}
+
 .table {
     float: left;
     width: calc(50% - 10px);
@@ -24,8 +33,12 @@ input.submit {
 }
 
 .jumbotron {
-    padding-bottom: 1em;
-    padding-top: 1em;
+    padding: 1em 4em;
+    margin: 0;
+}
+
+.row {
+    margin: 2em 0;
 }
 
 footer {
