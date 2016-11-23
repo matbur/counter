@@ -42,7 +42,7 @@ def gen_header():
 
     :return: string in Latex syntax
     """
-    return 'Z{} / {}{}'.format(subscript('Q', 2), subscript('Q', 1), subscript('Q', 0))
+    return '$Z${} / {}{}'.format(subscript('Q', 2), subscript('Q', 1), subscript('Q', 0))
 
 
 def begin_tabular(width: int):

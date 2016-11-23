@@ -14,8 +14,11 @@ def create_tex_file(moves, ff_type, file='file.tex'):
 
     to_write = gen_tex_file_content(moves, ff_type)
 
-    with open(file, 'w') as f:
-        f.write(to_write)
+    try:
+        with open(file, 'w') as f:
+            f.write(to_write)
+    except FileNotFoundError as err:
+        return err
 
 
 def create_pdf_file(file='file.tex'):
@@ -24,8 +27,8 @@ def create_pdf_file(file='file.tex'):
     :param file: tex file to compile
     """
     directory = os.path.dirname(file)
-    command = 'pdflatex -output-directory {} {} 1>/dev/null'.format(directory, file)
-    subprocess.call(command, shell=True)
+    command = 'pdflatex -halt-on-error -output-directory {} {} 1>/dev/null'.format(directory, file)
+    return subprocess.call(command, shell=True)
 
 
 def create_jpg_file(file='file'):
@@ -34,4 +37,4 @@ def create_jpg_file(file='file'):
     :param file: jpg file to convert
     """
     command = 'convert -density 150 {0}.pdf -append {0}.jpg'.format(file)
-    subprocess.call(command, shell=True)
+    return subprocess.call(command, shell=True)

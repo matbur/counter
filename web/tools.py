@@ -18,10 +18,10 @@ def is_empty(data):
 
 def decide(data, ff_type, ip):
     if is_empty(data):
-        return flash('Tabela jest pusta!')
+        return flash('Tabela jest pusta!', category='warning')
 
     if not is_valid(data):
-        return flash('Podano złe przejście!')
+        return flash('Podano złe przejście!', category='warning')
 
     create_files(data, ff_type, ip)
 
@@ -40,10 +40,18 @@ def parse_form(data):
     return parsed
 
 
+def error(filetype):
+    flash('Nastąpił problem z tworzeniem pliku {}'.format(filetype), category='error')
+
+
 def create_files(data, ff_type, file):
     tex_file = file + '.tex'
     moves = parse_form(data)
 
-    create_tex_file(moves, ff_type, tex_file)
-    create_pdf_file(tex_file)
-    create_jpg_file(file)
+    if create_tex_file(moves, ff_type, tex_file):
+        print('Probably you run server from wrong directory')
+        return error('TEX')
+    if create_pdf_file(tex_file):
+        return error('PDF')
+    if create_jpg_file(file):
+        return error('JPG')
