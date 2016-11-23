@@ -2,7 +2,7 @@ import os
 import random
 import string
 import sys
-from datetime import time
+from time import time
 
 from flask import flash
 
