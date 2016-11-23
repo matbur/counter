@@ -16,6 +16,7 @@ app.secret_key = 'very secret key'
 def index():
     ip = 'static/' + request.remote_addr
     form = MovesForm(request.form)
+
     if request.method == 'POST' and form.validate():
         data = form.data
         ff_type = data.pop('ff_type')
@@ -23,21 +24,10 @@ def index():
     return render_template('index.html', form=form, ts='?{}'.format(time()))
 
 
-@app.route('/file.tex')
-def get_tex_file():
-    file = request.remote_addr + '.tex'
-    return app.send_static_file(file)
-
-
-@app.route('/file.pdf')
-def get_pdf_file():
-    file = request.remote_addr + '.pdf'
-    return app.send_static_file(file)
-
-
-@app.route('/file.jpg')
-def get_jpg_file():
-    file = '{}.jpg'.format(request.remote_addr)
+@app.route('/file.<ext>')
+def get_file(ext):
+    print(ext)
+    file = '.'.join((request.remote_addr, ext))
     return app.send_static_file(file)
 
 

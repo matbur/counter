@@ -105,7 +105,7 @@ def gen_moves_table(moves):
     n = len(moves[0])
     rows = (
         ['t', 't+1'],
-        *((*z, subscript('q', t), subscript('q', u)) for *z, t, u in moves)
+        *moves
     )
 
     if n == 3:
@@ -372,7 +372,8 @@ def create_tex_file_content(moves, f_f):
 
     used_moves = [i[1] for i in sorted_moves]
     print(f_f)
-    print(used_moves)
+    print(set(used_moves))
+    print(sorted(moves))
 
     return '\n'.join((
         file_header,

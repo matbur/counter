@@ -1,8 +1,6 @@
-import subprocess
-
 from flask import flash
 
-from latex import create_pdf_file, create_tex_file
+from latex import create_jpg_file, create_pdf_file, create_tex_file
 
 
 def is_valid(data):
@@ -48,6 +46,4 @@ def create_files(data, ff_type, file):
 
     create_tex_file(moves, ff_type, tex_file)
     create_pdf_file(tex_file)
-
-    command = 'convert -density 150 {0}.pdf -append {0}.jpg'.format(file)
-    subprocess.call(command, shell=True)
+    create_jpg_file(file)
