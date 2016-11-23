@@ -96,6 +96,23 @@ def gen_output_table():
     return gen_tabular(rows)
 
 
+def gen_states_table(moves):
+    """ Function generates table with states.
+
+    :param moves: list of used states
+    :return: string in Latex syntax
+    """
+    moves = sorted(set(moves))
+    rows = (
+        [subscript('Q', i) for i in '210'],
+        *[(subscript('q', i), *to_bin(i)) for i in moves]
+    )
+
+    rows[0].insert(0, '')
+
+    return gen_tabular(rows)
+
+
 def gen_moves_table(moves):
     """ Function generates table of moves with 2 or 3 column.
 
@@ -226,23 +243,6 @@ def gen_boolean_function(moves, f_f, num):
     return function
 
 
-def gen_states_table(moves):
-    """ Function generates table with states.
-
-    :param moves: list of used states
-    :return: string in Latex syntax
-    """
-    moves = sorted(set(moves))
-    rows = (
-        [subscript('Q', i) for i in '210'],
-        *[(subscript('q', i), *to_bin(q)) for i, q in enumerate(moves)]
-    )
-
-    rows[0].insert(0, '')
-
-    return gen_tabular(rows)
-
-
 def gen_jk_tables(sorted_moves, full_moves):
     """ Function generates all tables with JK flip-flops.
 
@@ -355,7 +355,7 @@ def gen_t_tables(sorted_moves, full_moves):
     ))
 
 
-def create_tex_file_content(moves, f_f):
+def gen_tex_file_content(moves, f_f):
     """ Function generates content of tex file from given moves.
 
     :param moves: list of tuples (Z, from, to)
@@ -370,7 +370,7 @@ def create_tex_file_content(moves, f_f):
     sorted_moves = sorted(moves)
     full_moves = complete_moves(moves)
 
-    used_moves = [i[1] for i in sorted_moves]
+    used_moves = sum([i[1:] for i in sorted_moves], ())
     print(f_f)
     print(set(used_moves))
     print(sorted(moves))

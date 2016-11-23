@@ -1,7 +1,7 @@
 import os
 import subprocess
 
-from .logic import create_tex_file_content
+from .logic import gen_tex_file_content
 
 
 def create_tex_file(moves, ff_type, file='file.tex'):
@@ -12,7 +12,7 @@ def create_tex_file(moves, ff_type, file='file.tex'):
     :param moves: list of tuples (Z, from, to)
     """
 
-    to_write = create_tex_file_content(moves, ff_type)
+    to_write = gen_tex_file_content(moves, ff_type)
 
     with open(file, 'w') as f:
         f.write(to_write)
