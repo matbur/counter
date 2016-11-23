@@ -1,6 +1,21 @@
+import os
+import random
+import string
+import sys
+from datetime import time
+
 from flask import flash
 
+sys.path.append(os.path.dirname(__file__) + '/..')
 from latex import create_jpg_file, create_pdf_file, create_tex_file
+
+
+def random_filename():
+    return ''.join(random.sample(string.ascii_lowercase, 6))
+
+
+def get_time():
+    return '?{}'.format(time())
 
 
 def is_valid(data):

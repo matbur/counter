@@ -1,12 +1,7 @@
-import os
-import sys
-from time import time
+from flask import Flask, make_response, render_template, request
 
-from flask import Flask, render_template, request
-
-sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/..')
 from form import MovesForm
-from tools import decide
+from tools import decide, get_time, random_filename
 
 app = Flask(__name__)
 app.secret_key = 'very secret key'
@@ -14,20 +9,30 @@ app.secret_key = 'very secret key'
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    ip = 'static/' + request.remote_addr
     form = MovesForm(request.form)
+    fields = {'form': form, 'ts': get_time()}
+    resp = make_response(render_template('index.html', **fields))
+    filename = request.cookies.get('file')
+
+    print(request.remote_addr, filename)
+    if filename is None:
+        resp.set_cookie('file', random_filename())
+        return resp
+
+    filename = 'static/generated/' + filename
 
     if request.method == 'POST' and form.validate():
         data = form.data
         ff_type = data.pop('ff_type')
-        decide(data, ff_type, ip)
-    return render_template('index.html', form=form, ts='?{}'.format(time()))
+        decide(data, ff_type, filename)
+
+    return resp
 
 
 @app.route('/file.<ext>')
 def get_file(ext):
     print(ext)
-    file = '.'.join((request.remote_addr, ext))
+    file = 'generated/{}.{}'.format(request.cookies.get('file'), ext)
     return app.send_static_file(file)
 
 
