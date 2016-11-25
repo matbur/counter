@@ -18,14 +18,15 @@ def split(lst, width=4):
         yield lst[width * i:width * (i + 1)]
 
 
-def gen_gray(width=2):
+def gen_gray(width=2, isbin=True):
     """ Generator yields successive Gray numbers.
 
     :param width: number of bits
     """
     for i in range(1 << width):
         gray = i ^ (i >> 1)
-        yield '{0:0>{1}b}'.format(gray, width)
+        bin_gray = to_bin(gray, width)
+        yield (gray, bin_gray)[isbin]
 
 
 def gen_row(row):
@@ -57,15 +58,18 @@ def gen_flip_flop_content(moves, f_f, num):
     """ Function generates interior table to minimize for flip-flop.
 
     :param moves: list of movements
-    :param f_f: type of flip-flop
+    :param f_f: flip-flop function
     :param num: number of column
     :return: list with table
     """
 
+    used_moves = set(sum(moves, ()))
+    n = len(max(to_bin(i) for i in used_moves))
+
     content = list(fields)
     for i, (*_, t, u) in zip(content[:], moves):
-        t_n = to_bin(t)[2 - num]
-        u_n = to_bin(u)[2 - num]
+        t_n = to_bin(t, n)[n - 1 - num]
+        u_n = to_bin(u, n)[n - 1 - num]
         content[i] = f_f(t_n, u_n)
     return content
 
@@ -103,11 +107,11 @@ def gen_states_table(moves):
     :return: string in Latex syntax
     """
     moves = sorted(set(moves))
+    n = len(max(to_bin(i) for i in moves))
     rows = (
-        [subscript('Q', i) for i in '210'],
-        *[(subscript('q', i), *to_bin(i)) for i in moves]
+        [subscript('Q', n - i) for i in range(n)],
+        *[(subscript('q', i), *to_bin(i, n)) for i in moves]
     )
-
     rows[0].insert(0, '')
 
     return gen_tabular(rows)
@@ -138,21 +142,23 @@ def gen_bin_moves_table(moves):
     :return: string containing whole table
     """
     n = len(moves[0])
-    rows = (
-        [multicolumn(3, 't'), multicolumn(3, 't+1')],
-        [subscript('Q', i) for i in '210'] * 2,
-        *[(*z, *to_bin(t), *to_bin(u)) for *z, t, u in moves]
-    )
+    used_moves = sorted(set(sum(moves, ())))
+    n2 = len(max(to_bin(i) for i in used_moves))
+    c = ('QQ', 'XY')[n2 == 4]
+    rows = [
+        sum([[subscript(c[j], n2 - i) for i in range(n2)] for j in range(2)], []),
+        *[(*z, *to_bin(t, n2), *to_bin(u, n2)) for *z, t, u in moves]
+    ]
 
     if n == 3:
-        rows[0].insert(0, '')
+        rows.insert(0, ['', multicolumn(n2, 't'), multicolumn(n2, 't+1')])
         rows[1].insert(0, '$Z$')
 
     return gen_tabular(rows)
 
 
 def gen_jk_flip_flops_table(moves):
-    """ Function generates table of JK flip-flops according to moves.
+    """ Function generates table of JK flip-flops.
 
     :param moves: list of moves
     :return: string containing whole table
@@ -170,19 +176,22 @@ def gen_jk_flip_flops_table(moves):
 
 
 def gen_all_flip_flops_table(moves, f_f):
-    """ Function generates table of JK flip-flops according to moves.
+    """ Function generates table of flip-flops.
 
     :param moves: list of moves
+    :param f_f: flip-flop function
     :return: string containing whole table
     """
+    used_moves = sorted(set(sum(moves, ())))
+    n = len(max(to_bin(i) for i in used_moves))
     rows = [
-        [multicolumn(3, 'Przerzutniki')],
-        [subscript(i, j) for j in '210' for i in f_f.name]
+        [multicolumn(n, 'Przerzutniki')],
+        [subscript(i, n - j) for j in range(n) for i in f_f.name]
     ]
 
     for *_, t, u in moves:
-        it = zip(to_bin(t), to_bin(u))
-        rows.append([f_f(*next(it)) for _ in '210'])
+        it = zip(to_bin(t, n), to_bin(u, n))
+        rows.append([f_f(*next(it)) for _ in range(n)])
 
     return gen_tabular(rows)
 
@@ -198,6 +207,9 @@ def gen_flip_flop_table(moves, f_f, num):
 
     content = gen_flip_flop_content(moves, f_f, num)
 
+    used_moves = set(sum(moves, ()))
+    n = len(max(to_bin(i) for i in used_moves))
+
     it_gray = gen_gray()
     it_con = split(content)
     rows = [
@@ -207,9 +219,11 @@ def gen_flip_flop_table(moves, f_f, num):
         (next(it_gray), *next(it_con)),
     ]
 
-    if len(moves[0]) == 3:
+    if len(moves[0]) == 3 or n == 4:
         rows.append((next(it_gray), *next(it_con)))
         rows.append((next(it_gray), *next(it_con)))
+
+    # print('r', rows)
 
     return gen_tabular(rows)
 
@@ -355,6 +369,43 @@ def gen_t_tables(sorted_moves, full_moves):
     ))
 
 
+def gen_none_tables(sorted_moves, full_moves):
+    """ Function generates all tables with no flip-flops.
+
+    :param sorted_moves: list of sorted moves
+    :param full_moves: complete list of moves
+    :return: string in Latex syntax
+    """
+    return '\n'.join((
+        subsection('Tabela przejsc'),
+        gen_bin_moves_table(sorted_moves),
+        # gen_all_flip_flops_table(sorted_moves, D),
+        vspace(), '',
+        subsection('Minimalizacja metoda Karnough'),
+        minipage((
+            gen_flip_flop_table(full_moves, D, 3),
+            vspace(.3), '',
+            gen_boolean_function(full_moves, D, 3),
+        )),
+        minipage((
+            gen_flip_flop_table(full_moves, D, 2),
+            vspace(.3), '',
+            gen_boolean_function(full_moves, D, 2),
+        )),
+        vspace(), '',
+        minipage((
+            gen_flip_flop_table(full_moves, D, 1),
+            vspace(.3), '',
+            gen_boolean_function(full_moves, D, 1),
+        )),
+        minipage((
+            gen_flip_flop_table(full_moves, D, 0),
+            vspace(.3), '',
+            gen_boolean_function(full_moves, D, 0),
+        )),
+    ))
+
+
 def gen_tex_file_content(moves, f_f):
     """ Function generates content of tex file from given moves.
 
@@ -365,7 +416,8 @@ def gen_tex_file_content(moves, f_f):
     ff_map = {
         'jk': gen_jk_tables,
         'd': gen_d_tables,
-        't': gen_t_tables
+        't': gen_t_tables,
+        '': gen_none_tables
     }
     sorted_moves = sorted(moves)
     full_moves = complete_moves(moves)

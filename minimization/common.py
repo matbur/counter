@@ -10,32 +10,57 @@ def to_bin(value, width=3):
     return '{0:0>{1}b}'.format(value, width)
 
 
-# TODO: what if we do not have Z signal?
 def complete_moves(moves):
     """ Function fills missing moves with '*'.
 
     :param moves: list of moves
     :return: completed, sorted list of moves
     """
-    filled = list(moves)
+    missing = set(range(8)) - set(i[-2] for i in moves)
+    num = len(moves[0])
 
-    missing = set(range(8)) - set(i[-2] for i in filled)
-    if len(moves[0]) == 3:
-        for i in missing:
-            filled.append((0, i, '*'))
-            filled.append((1, i, '*'))
-    else:
-        for i in missing:
-            filled.append((i, '*'))
+    completed = {
+        2: complete_moves2,
+        3: complete_moves3,
+    }[num](moves, missing)
 
-    d = {i[:2] for i in filled}
+    return sorted(completed)
+
+
+def complete_moves2(moves, missing_moves):
+    """ Function fills missing_moves moves with '*'.
+
+    :param moves: list of moves
+    :return: completed, sorted list of moves
+    """
+    completed = list(moves)
+    for i in missing_moves:
+        completed.append((i, '*'))
+
+    return completed
+
+
+def complete_moves3(moves, missing_moves):
+    """ Function fills missing moves with '*'.
+
+    :param moves: list of moves
+    :return: completed, sorted list of moves
+    """
+    completed = list(moves)
+
+    for i in missing_moves:
+        completed.append((0, i, '*'))
+        completed.append((1, i, '*'))
+
+    d = {i[:2] for i in completed}
     a = {(i, j) for i in range(2) for j in range(8)}
-    for _, t, u in list(filled):
+    for _, t, u in list(completed):
         for _, i in a - d:
             if t != i:
                 continue
-            filled.append((1, t, u))
-    return sorted(filled)
+            completed.append((1, t, u))
+
+    return completed
 
 
 def get_signal(implicant, index, signal):

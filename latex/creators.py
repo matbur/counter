@@ -1,4 +1,3 @@
-import os
 import subprocess
 
 from .logic import gen_tex_file_content
@@ -26,8 +25,9 @@ def create_pdf_file(file='file.tex'):
 
     :param file: tex file to compile
     """
-    directory = os.path.dirname(file)
-    command = 'pdflatex -halt-on-error -output-directory {} {} 1>/dev/null'.format(directory, file)
+    # directory = os.path.dirname(file)
+    # command = 'pdflatex -halt-on-error -output-directory {} {} 1>/dev/null'.format(directory, file)
+    command = 'pdflatex -halt-on-error -output-directory $(dirname {0}) {0} 1>/dev/null'.format(file)
     return subprocess.call(command, shell=True)
 
 
