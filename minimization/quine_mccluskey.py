@@ -1,4 +1,4 @@
-""" Module contains functions to run Quine-McCluskey algorithm.
+""" Module contains class which runs Quine-McCluskey algorithm.
     more information:  https://en.wikipedia.org/wiki/Quine-McCluskey_algorithm
 """
 
@@ -6,6 +6,9 @@ from common import bin_len, to_bin
 
 
 class QuineMcCluskey:
+    """ Class implements minimization with Quine-McCluskey algorithm.
+    """
+
     def __init__(self, minterms, dontcares=(), signals=''):
         self.minterms = minterms
         self.dontcares = dontcares
@@ -21,9 +24,9 @@ class QuineMcCluskey:
         self.__run()
 
     def get(self):
-        """ Method returns minimized function
+        """ Method returns minimized implicants
 
-        :return: set with implicants
+        :return: set
         """
         return self.unused
 
