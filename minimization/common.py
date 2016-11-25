@@ -1,4 +1,4 @@
-def to_bin(value, width=3):
+def to_bin(value, width=0):
     """ Function generates formatted int to bin.
 
     :param value: value to transform
@@ -8,6 +8,10 @@ def to_bin(value, width=3):
     if value == '*':
         return '*' * width
     return '{0:0>{1}b}'.format(value, width)
+
+
+def bin_len(num):
+    return len(to_bin(num, 0))
 
 
 def complete_moves(moves):
@@ -106,11 +110,11 @@ def get_function(implicants, signals):
 
 
 def get_minterms(data, order):
-    """ Function divides list of signals into minterms and dontcares.
+    """ Function divides list of signals into __flattened and dontcares.
 
     :param data: input signals
     :param order: order in which the data come
-    :return: lists of minterms and dontcares
+    :return: lists of __flattened and dontcares
     """
     minterms = []
     dontcares = []

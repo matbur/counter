@@ -2,7 +2,21 @@
     more information: https://en.wikipedia.org/wiki/Petrick%27s_method
 """
 
-from .common import to_bin
+from common import to_bin
+
+
+class Petricks:
+    def __init__(self, implicants, dontcares=()):
+        self.implicants = implicants
+        self.dontcares = dontcares
+
+    def __str__(self):
+        return 'P: i={} d={}'.format(self.implicants, self.dontcares)
+
+
+if __name__ == '__main__':
+    im = {'10--', '1-1-', '1--0', '-100'}
+    print(Petricks(im))
 
 
 def gen_numbers(implicant):
@@ -36,11 +50,11 @@ def join(this, other):
 
 
 def group_implicants(imp_num, minterms):
-    """ Function groups implicants to corresponding minterms.
+    """ Function groups implicants to corresponding __flattened.
 
     :param imp_num: list of tuples (implicant, number)
-    :param minterms: list of minterms
-    :return: list of grouped minterms
+    :param minterms: list of __flattened
+    :return: list of __grouped __flattened
     """
     grouped = {}
     for term in minterms:
@@ -66,7 +80,7 @@ def Petricks_method(unused, minterms):
     """ Function runs algorithm.
 
     :param unused: set of unused implicants
-    :param minterms: list of minterms
+    :param minterms: list of __flattened
     :return: set of minimized implicants
     """
     pairs = tuple(pair_implicants(unused))

@@ -110,7 +110,7 @@ def gen_states_table(moves):
     n = len(max(to_bin(i) for i in moves))
     rows = (
         [subscript('Q', n - i) for i in range(n)],
-        *[(subscript('q', i), *to_bin(i, n)) for i in moves]
+        *[(subscript('qmc', i), *to_bin(i, n)) for i in moves]
     )
     rows[0].insert(0, '')
 
