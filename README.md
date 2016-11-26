@@ -6,7 +6,7 @@
   $ which pdflatex
   $ which convert
   ```
-  If you don't have it, install it. The program convert is part of the imagemagick package, thus to install both packages i.e. on Debian you will have to run command `apt install imagemagick pdflatex` as `sudo`.
+  If you don't have it, install it. The program convert is part of the imagemagick package, thus to install both packages i.e. on Debian you will have to run command `apt install imagemagick pdflatex` as `root`.
 
 
 2. Create virtualenv and install python packages:
