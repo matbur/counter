@@ -14,9 +14,11 @@ class Petricks:
         self.minterms = minterms
         self.minimized = None
 
+        self.__width = None
         self.__paired = None
         self.__grouped = None
 
+        self.__calc_width()
         self.__pair()
         self.__group()
         self.__run()
@@ -27,6 +29,13 @@ class Petricks:
         :return: set
         """
         return self.minimized
+
+    def __calc_width(self):
+        """ Method calculates width of the implicants.
+        """
+        implicants = self.implicants
+
+        self.__width = len(max(implicants))
 
     def __pair(self):
         """ Method creates pairs of implicant with matching number.
@@ -44,6 +53,7 @@ class Petricks:
     def __group(self):
         """ Method groups implicants by number.
         """
+        width = self.__width
         minterms = self.minterms
         paired = self.__paired
 
@@ -51,7 +61,7 @@ class Petricks:
         for term in minterms:
             grouped[term] = []
             for imp, num in paired:
-                if num != to_bin(term, 4):
+                if num != to_bin(term, width):
                     continue
                 grouped[term].append(imp)
 
