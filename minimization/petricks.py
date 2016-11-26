@@ -24,7 +24,7 @@ class Petricks:
         self.__run()
 
     def get(self):
-        """ Method returns minimized implicants
+        """ Method returns minimized implicants.
 
         :return: set
         """
@@ -70,17 +70,25 @@ class Petricks:
     def __run(self):
         """ Function runs algorithm.
         """
-
         while len(self.__grouped) != 1:
             self.__step()
 
-        self.minimized = min(*self.__grouped, key=len)
+        minimized = self.__grouped[0]
 
-        # Why this is here???
-        # result = results[0]
-        # if isinstance(result[0], str):
-        #     return result
-        # return min(result, key=len)
+        if isinstance(minimized[0], str):
+            minimized = [{*minimized}]
+
+        sort_key = self.__sort_key
+        self.minimized = min(minimized, key=sort_key)
+
+    @staticmethod
+    def __sort_key(implicant):
+        """ Function provides key to sort implicants
+
+        :param implicant: string
+        :return: tuple
+        """
+        return len(implicant), sorted(implicant)
 
     def __step(self):
         """ Method runs one step in algorithm.

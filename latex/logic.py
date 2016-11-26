@@ -451,3 +451,56 @@ def gen_tex_file_content(moves, f_f):
 
         file_footer
     ))
+
+
+def complete_moves(moves):
+    """ Function fills missing moves with '*'.
+
+    :param moves: list of moves
+    :return: completed, sorted list of moves
+    """
+    missing = set(range(8)) - set(i[-2] for i in moves)
+    num = len(moves[0])
+
+    completed = {
+        2: complete_moves2,
+        3: complete_moves3,
+    }[num](moves, missing)
+
+    return sorted(completed)
+
+
+def complete_moves2(moves, missing_moves):
+    """ Function fills missing_moves moves with '*'.
+
+    :param moves: list of moves
+    :return: completed, sorted list of moves
+    """
+    completed = list(moves)
+    for i in missing_moves:
+        completed.append((i, '*'))
+
+    return completed
+
+
+def complete_moves3(moves, missing_moves):
+    """ Function fills missing moves with '*'.
+
+    :param moves: list of moves
+    :return: completed, sorted list of moves
+    """
+    completed = list(moves)
+
+    for i in missing_moves:
+        completed.append((0, i, '*'))
+        completed.append((1, i, '*'))
+
+    d = {i[:2] for i in completed}
+    a = {(i, j) for i in range(2) for j in range(8)}
+    for _, t, u in list(completed):
+        for _, i in a - d:
+            if t != i:
+                continue
+            completed.append((1, t, u))
+
+    return completed

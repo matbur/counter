@@ -27,7 +27,7 @@ class QuineMcCluskey:
         self.__run()
 
     def get(self):
-        """ Method returns minimized implicants
+        """ Method returns minimized implicants.
 
         :return: set
         """
@@ -138,7 +138,7 @@ class QuineMcCluskey:
         return sum(differences) == 1
 
     def __str__(self):
-        return 'QMc: m={} d={} u={}'.format(self.minterms, self.dontcares, self.unused)
+        return 'QMc: m={minterms}, d={dontcares}, u={unused}'.format_map(vars(self))
 
 
 if __name__ == '__main__':
