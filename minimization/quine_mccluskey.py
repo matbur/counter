@@ -21,9 +21,6 @@ class QuineMcCluskey:
         self.__flattened = None
         self.__used = None
 
-        self.__parse_signals()
-        self.__calc_width()
-        self.__parse_minterms()
         self.__run()
 
     def get(self):
@@ -32,6 +29,23 @@ class QuineMcCluskey:
         :return: set
         """
         return self.unused
+
+    def __run(self):
+        """ Method runs algorithm.
+        """
+        self.__prepare()
+
+        while self.__flattened:
+            self.__group()
+            self.__flat()
+            self.__find_unused()
+
+    def __prepare(self):
+        """ Method runs necessary methods in order to prepare data for algorithm.
+        """
+        self.__parse_signals()
+        self.__calc_width()
+        self.__parse_minterms()
 
     def __parse_signals(self):
         """ Method changes signals to its length.
@@ -61,14 +75,6 @@ class QuineMcCluskey:
         minterms = itertools.chain(self.minterms, self.dontcares)
 
         self.__flattened = [to_bin(i, width) for i in minterms]
-
-    def __run(self):
-        """ Method runs algorithm.
-        """
-        while self.__flattened:
-            self.__group()
-            self.__flat()
-            self.__find_unused()
 
     def __group(self):
         """ Method groups items by number of 1s.

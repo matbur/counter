@@ -121,7 +121,3 @@ if __name__ == '__main__':
     mi = Minimization(m, d, s)
     print(mi)
     print(mi.get())
-
-    mi = Minimization.from_data(range(4), [0, 0, 0, 1], 'ab')
-    print(mi)
-    print(mi.get())

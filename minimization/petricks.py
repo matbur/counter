@@ -18,9 +18,6 @@ class Petricks:
         self.__paired = None
         self.__grouped = None
 
-        self.__calc_width()
-        self.__pair()
-        self.__group()
         self.__run()
 
     def get(self):
@@ -29,6 +26,38 @@ class Petricks:
         :return: set
         """
         return self.minimized
+
+    def __run(self):
+        """ Function runs algorithm.
+        """
+        self.__prepare()
+
+        while len(self.__grouped) != 1:
+            self.__step()
+
+        minimized = self.__grouped[0]
+
+        if isinstance(minimized[0], str):
+            minimized = [{*minimized}]
+
+        sort_key = self.__sort_key
+        self.minimized = min(minimized, key=sort_key)
+
+    @staticmethod
+    def __sort_key(implicant):
+        """ Function provides key to sort implicants
+
+        :param implicant: string
+        :return: tuple
+        """
+        return len(implicant), sorted(implicant)
+
+    def __prepare(self):
+        """ Method runs necessary methods in order to prepare data for algorithm.
+        """
+        self.__calc_width()
+        self.__pair()
+        self.__group()
 
     def __calc_width(self):
         """ Method calculates width of the implicants.
@@ -66,29 +95,6 @@ class Petricks:
                 grouped[term].append(imp)
 
         self.__grouped = list(grouped.values())
-
-    def __run(self):
-        """ Function runs algorithm.
-        """
-        while len(self.__grouped) != 1:
-            self.__step()
-
-        minimized = self.__grouped[0]
-
-        if isinstance(minimized[0], str):
-            minimized = [{*minimized}]
-
-        sort_key = self.__sort_key
-        self.minimized = min(minimized, key=sort_key)
-
-    @staticmethod
-    def __sort_key(implicant):
-        """ Function provides key to sort implicants
-
-        :param implicant: string
-        :return: tuple
-        """
-        return len(implicant), sorted(implicant)
 
     def __step(self):
         """ Method runs one step in algorithm.
