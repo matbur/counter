@@ -15,6 +15,14 @@ class TestLogic(unittest.TestCase):
         self.assertEqual(list(gen_gray(0)), ['0'])
         self.assertEqual(list(gen_gray(1)), ['0', '1'])
         self.assertEqual(list(gen_gray(2)), ['00', '01', '11', '10'])
+        self.assertEqual(list(gen_gray(0, True)), ['0'])
+        self.assertEqual(list(gen_gray(1, True)), ['0', '1'])
+        self.assertEqual(list(gen_gray(2, True)), ['00', '01', '11', '10'])
+        self.assertEqual(list(gen_gray(isbin=False)), [0, 1, 3, 2])
+        self.assertEqual(list(gen_gray(0, False)), [0])
+        self.assertEqual(list(gen_gray(1, False)), [0, 1])
+        self.assertEqual(list(gen_gray(2, False)), [0, 1, 3, 2])
+        self.assertEqual(list(gen_gray(3, False)), [0, 1, 3, 2, 6, 7, 5, 4])
 
     def test_gen_row(self):
         self.assertEqual(gen_row(['a']), r'a \\')

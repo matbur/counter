@@ -12,6 +12,7 @@ file_footer = r'\end{document}'
 
 hline = r'\hline'
 qquad = r'$\qquad$'
+indent = r'\indent'
 end_tabular = r'\end{tabular}'
 
 
@@ -37,12 +38,21 @@ def subscript(big, small, isinside=False):
     return ('${}$', '{}')[isinside].format(result)
 
 
-def gen_header():
+# TODO: move this function to logic
+def gen_header(signals=('Z', 'Q3', 'Q2', 'Q1')):
     """ Function generates header for flip-flop table.
 
     :return: string in Latex syntax
     """
-    return '$Z${} / {}{}'.format(subscript('Q', 2), subscript('Q', 1), subscript('Q', 0))
+    # return '$Z${} / {}{}'.format(subscript('Q', 2), subscript('Q', 1), subscript('Q', 0))
+    a = map(foo, signals)
+    return '{}{} / {}{}'.format(*a)
+
+
+def foo(item):
+    if len(item) == 1:
+        return '${}$'.format(item)
+    return subscript(item[0], item[1])
 
 
 def begin_tabular(width: int):
