@@ -1,9 +1,9 @@
 """ Module contains logic to create latex file.
 """
 
-from minimization import D, J, JK, K, T, complete_moves, get_minterms, minimize, to_bin
-from .parts import begin_tabular, end_tabular, file_footer, file_header, gen_header, hline, minipage, multicolumn, \
-    overline, subscript, subsection, vspace
+from minimization import D, J, JK, K, Minimization, T, to_bin
+from .parts import begin_tabular, end_tabular, file_footer, file_header, gen_header, hline, indent, minipage, \
+    multicolumn, overline, subscript, subsection, vspace
 
 fields = (0, 1, 3, 2, 4, 5, 7, 6, 12, 13, 15, 14, 8, 9, 11, 10)
 
@@ -169,7 +169,7 @@ def gen_jk_flip_flops_table(moves):
     ]
 
     for *_, t, u in moves:
-        it = zip(to_bin(t), to_bin(u))
+        it = zip(to_bin(t, 3), to_bin(u, 3))
         rows.append(sum([JK(*next(it)) for _ in '210'], ()))
 
     return gen_tabular(rows)
@@ -249,9 +249,10 @@ def gen_boolean_function(moves, f_f, num):
     :return: minimized boolean function in Latex syntax
     """
     data = gen_flip_flop_content(moves, f_f, num)
-    minterms, dontcares = get_minterms(data, fields)
+    # minterms, dontcares = get_minterms(data, fields)
     signals = ['Z', *(subscript('Q', i, True) for i in '210')]
-    minimized = minimize(minterms, dontcares, signals)
+    # minimized = minimize(minterms, dontcares, signals)
+    minimized = Minimization.from_data(fields, data, signals).get()
     changed = change_negation(minimized)
     function = '${} = {}$'.format(subscript(f_f.name, num, True), changed)
     return function
@@ -270,6 +271,7 @@ def gen_jk_tables(sorted_moves, full_moves):
         gen_jk_flip_flops_table(sorted_moves),
         vspace(), '',
         subsection('Minimalizacja metoda Karnough dla przerzutkow JK'),
+        indent, '',
         minipage((
             gen_flip_flop_table(full_moves, J, 2),
             vspace(.3), '',
@@ -318,6 +320,7 @@ def gen_d_tables(sorted_moves, full_moves):
         gen_all_flip_flops_table(sorted_moves, D),
         vspace(), '',
         subsection('Minimalizacja metoda Karnough dla przerzutkow D'),
+        indent, '',
         minipage((
             gen_flip_flop_table(full_moves, D, 2),
             vspace(.3), '',
@@ -350,6 +353,7 @@ def gen_t_tables(sorted_moves, full_moves):
         gen_all_flip_flops_table(sorted_moves, T),
         vspace(), '',
         subsection('Minimalizacja metoda Karnough dla przerzutkow T'),
+        indent, '',
         minipage((
             gen_flip_flop_table(full_moves, T, 2),
             vspace(.3), '',

@@ -12,6 +12,7 @@ file_footer = r'\end{document}'
 
 hline = r'\hline'
 qquad = r'$\qquad$'
+indent = r'\indent'
 end_tabular = r'\end{tabular}'
 
 
