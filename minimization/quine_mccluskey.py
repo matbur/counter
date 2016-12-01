@@ -3,7 +3,7 @@
 """
 import itertools
 
-from common import bin_len, to_bin
+from .common import bin_len, to_bin
 
 
 class QuineMcCluskey:

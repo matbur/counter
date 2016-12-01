@@ -2,7 +2,7 @@
     more information: https://en.wikipedia.org/wiki/Petrick%27s_method
 """
 
-from common import to_bin
+from .common import to_bin
 
 
 class Petricks:

@@ -1,5 +1,5 @@
-from petricks import Petricks
-from quine_mccluskey import QuineMcCluskey
+from .petricks import Petricks
+from .quine_mccluskey import QuineMcCluskey
 
 
 class Minimization:
