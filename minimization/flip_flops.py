@@ -8,6 +8,11 @@
 
 
 def add_name(func):
+    """ Decorator add new attribute to function.
+
+    :param func: function which needs new attribute
+    :return: function
+    """
     func.name = func.__name__
     return func
 

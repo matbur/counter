@@ -1,3 +1,6 @@
+""" Module contains class which minimizes boolean function.
+"""
+
 from .petricks import Petricks
 from .quine_mccluskey import QuineMcCluskey
 
