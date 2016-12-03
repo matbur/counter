@@ -2,56 +2,12 @@
 """
 
 from minimization import D, J, JK, K, Minimization, T, to_bin
-from .parts import begin_tabular, end_tabular, file_footer, file_header, gen_header, hline, indent, minipage, \
-    multicolumn, overline, subscript, subsection, vspace
+from .common import gen_fields, gen_gray, split
+from .document import Document
+from .table import Table
 
-fields = (0, 1, 3, 2, 4, 5, 7, 6, 12, 13, 15, 14, 8, 9, 11, 10)
-
-
-def split(lst, width=4):
-    """ Generator yields lst in parts.
-
-    :param lst: list of elements
-    :param width: length of each part
-    """
-    for i in range(len(lst) // width):
-        yield lst[width * i:width * (i + 1)]
-
-
-def gen_gray(width=2, isbin=True):
-    """ Generator yields successive Gray numbers.
-
-    :param width: number of bits
-    """
-    for i in range(1 << width):
-        gray = i ^ (i >> 1)
-        bin_gray = to_bin(gray, width)
-        yield (gray, bin_gray)[isbin]
-
-
-def gen_row(row):
-    """ Function transforms list of items to one row from Latex.
-
-    :param row: list of items
-    :return: merged row
-    """
-    row = map(str, row)
-    return ' & '.join(row) + r' \\'
-
-
-def gen_tabular(rows, sep=' '):
-    """ Function combines all parts of table.
-
-    :param rows: list of rows
-    :param sep: separator between rows
-    :return: string, merged table
-    """
-    n = max(len(row) for row in rows)
-    s = [begin_tabular(n),
-         *(gen_row(row) for row in rows),
-         end_tabular]
-    # sep = '\n'
-    return '{0}{1}{0}'.format(sep, hline).join(s)
+indent, minipage, overline, subscript, subsection, vspace = Document.indent, Document.minipage, Document.overline, Document.subscript, Document.subsection, Document.vspace
+gen_header = Document.gen_header
 
 
 def gen_flip_flop_content(moves, f_f, num):
@@ -66,7 +22,7 @@ def gen_flip_flop_content(moves, f_f, num):
     used_moves = set(sum(moves, ()))
     n = len(max(to_bin(i) for i in used_moves))
 
-    content = list(fields)
+    content = list(gen_fields(2, 2))
     for i, (*_, t, u) in zip(content[:], moves):
         t_n = to_bin(t, n)[n - 1 - num]
         u_n = to_bin(u, n)[n - 1 - num]
@@ -84,7 +40,7 @@ def gen_input_table():
         (subscript('z', '0'), 0),
         (subscript('z', '1'), 1),
     )
-    return gen_tabular(rows)
+    return Table(rows).gen_tabular()
 
 
 def gen_output_table():
@@ -97,7 +53,7 @@ def gen_output_table():
         (subscript('y', '0'), 0),
         (subscript('y', '1'), 1),
     )
-    return gen_tabular(rows)
+    return Table(rows).gen_tabular()
 
 
 def gen_states_table(moves):
@@ -110,11 +66,11 @@ def gen_states_table(moves):
     n = len(max(to_bin(i) for i in moves))
     rows = (
         [subscript('Q', n - i) for i in range(n)],
-        *[(subscript('qmc', i), *to_bin(i, n)) for i in moves]
+        *[(subscript('q', i), *to_bin(i, n)) for i in moves]
     )
     rows[0].insert(0, '')
 
-    return gen_tabular(rows)
+    return Table(rows).gen_tabular()
 
 
 def gen_moves_table(moves):
@@ -132,7 +88,7 @@ def gen_moves_table(moves):
     if n == 3:
         rows[0].insert(0, '$Z$')
 
-    return gen_tabular(rows)
+    return Table(rows).gen_tabular()
 
 
 def gen_bin_moves_table(moves):
@@ -151,10 +107,10 @@ def gen_bin_moves_table(moves):
     ]
 
     if n == 3:
-        rows.insert(0, ['', multicolumn(n2, 't'), multicolumn(n2, 't+1')])
+        rows.insert(0, ['', Table.multicolumn(n2, 't'), Table.multicolumn(n2, 't+1')])
         rows[1].insert(0, '$Z$')
 
-    return gen_tabular(rows)
+    return Table(rows).gen_tabular()
 
 
 def gen_jk_flip_flops_table(moves):
@@ -164,7 +120,7 @@ def gen_jk_flip_flops_table(moves):
     :return: string containing whole table
     """
     rows = [
-        [multicolumn(6, 'Przerzutniki')],
+        [Table.multicolumn(6, 'Przerzutniki')],
         [subscript(i, j) for j in '210' for i in 'JK']
     ]
 
@@ -172,7 +128,7 @@ def gen_jk_flip_flops_table(moves):
         it = zip(to_bin(t, 3), to_bin(u, 3))
         rows.append(sum([JK(*next(it)) for _ in '210'], ()))
 
-    return gen_tabular(rows)
+    return Table(rows).gen_tabular()
 
 
 def gen_all_flip_flops_table(moves, f_f):
@@ -185,7 +141,7 @@ def gen_all_flip_flops_table(moves, f_f):
     used_moves = sorted(set(sum(moves, ())))
     n = len(max(to_bin(i) for i in used_moves))
     rows = [
-        [multicolumn(n, 'Przerzutniki')],
+        [Table.multicolumn(n, 'Przerzutniki')],
         [subscript(i, n - j) for j in range(n) for i in f_f.name]
     ]
 
@@ -193,7 +149,7 @@ def gen_all_flip_flops_table(moves, f_f):
         it = zip(to_bin(t, n), to_bin(u, n))
         rows.append([f_f(*next(it)) for _ in range(n)])
 
-    return gen_tabular(rows)
+    return Table(rows).gen_tabular()
 
 
 def gen_flip_flop_table(moves, f_f, num):
@@ -213,7 +169,7 @@ def gen_flip_flop_table(moves, f_f, num):
     it_gray = gen_gray()
     it_con = split(content)
     rows = [
-        [multicolumn(5, subscript(f_f.name, num))],
+        [Table.multicolumn(5, subscript(f_f.name, num))],
         (gen_header(), *gen_gray()),
         (next(it_gray), *next(it_con)),
         (next(it_gray), *next(it_con)),
@@ -223,9 +179,7 @@ def gen_flip_flop_table(moves, f_f, num):
         rows.append((next(it_gray), *next(it_con)))
         rows.append((next(it_gray), *next(it_con)))
 
-    # print('r', rows)
-
-    return gen_tabular(rows)
+    return Table(rows).gen_tabular()
 
 
 def change_negation(expression):
@@ -252,6 +206,7 @@ def gen_boolean_function(moves, f_f, num):
     # minterms, dontcares = get_minterms(data, fields)
     signals = ['Z', *(subscript('Q', i, True) for i in '210')]
     # minimized = minimize(minterms, dontcares, signals)
+    fields = gen_fields(2, 2)
     minimized = Minimization.from_data(fields, data, signals).get()
     changed = change_negation(minimized)
     function = '${} = {}$'.format(subscript(f_f.name, num, True), changed)
@@ -431,8 +386,7 @@ def gen_tex_file_content(moves, f_f):
     print(set(used_moves))
     print(sorted(moves))
 
-    return '\n'.join((
-        file_header,
+    return Document((
         '',
         subsection('Zakodowane wejsc, wyjsc i stanow wewnetrznych'),
         minipage((
@@ -452,9 +406,7 @@ def gen_tex_file_content(moves, f_f):
 
         ff_map[f_f](sorted_moves, full_moves),
         vspace(2), '',
-
-        file_footer
-    ))
+    )).generate_tex()
 
 
 def complete_moves(moves):

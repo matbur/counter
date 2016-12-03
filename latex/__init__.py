@@ -3,4 +3,4 @@
 
 from .creators import *
 from .logic import *
-from .parts import *
+from .document import *
