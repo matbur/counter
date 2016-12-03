@@ -25,6 +25,9 @@ class Minimization:
         :param signals: names of signals
         :return: class instance
         """
+        order = list(order)
+        print('ord', order)
+        print('dat', data)
         minterms = []
         dontcares = []
         list_map = {
@@ -35,6 +38,8 @@ class Minimization:
         for ind, value in zip(order, data):
             list_map[value].append(ind)
 
+        print('min', minterms)
+        print('don', dontcares)
         return cls(minterms, dontcares, signals)
 
     def get(self):

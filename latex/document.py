@@ -72,19 +72,20 @@ class Document:
         return r'\subsection{{{}}}'.format(text)
 
     @staticmethod
-    def gen_header(signals=('Z', 'Q3', 'Q2', 'Q1')):
+    def gen_header(rnum, cnum, is_z=False):
         """ Function generates header for flip-flop table.
 
         :return: string in Latex syntax
         """
+        subscript = Document.subscript
 
-        def foo(item):
-            if len(item) == 1:
-                return '${}$'.format(item)
-            return Document.subscript(item[0], item[1])
+        n = rnum + cnum - is_z
 
-        a = map(foo, signals)
-        return '{}{} / {}{}'.format(*a)
+        s = '{} / {}'.format('{}' * rnum, '{}' * cnum)
+        n_ = [subscript('Q', n - 1 - i) for i in range(n)]
+        if is_z:
+            n_.insert(0, 'Z')
+        return s.format(*n_)
 
 
 if __name__ == '__main__':
