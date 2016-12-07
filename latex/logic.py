@@ -1,36 +1,13 @@
 """ Module contains logic to create latex file.
 """
-
 from minimization import D, JK, Minimization, T, to_bin
-from .common import flatten, gen_fields, gen_gray, split
-from .document import Document
+from .common import flatten, gen_fields
+from .document import Document, subscript
+from .flip_flop_table import FlipFlopTable
+from .karnough_table import KarnoughTable
 from .table import Table
 
-indent, minipage, overline, subscript, subsection, vspace = Document.indent, Document.minipage, Document.overline, Document.subscript, Document.subsection, Document.vspace
-gen_header = Document.gen_header
-
-
-def gen_flip_flop_content(moves, f_f, num, rnum):
-    """ Function generates interior table to minimize for flip-flop.
-
-    :param moves: list of movements
-    :param f_f: flip-flop function
-    :param num: number of column
-    :return: list with table
-    """
-    used_moves = flatten(moves)
-    n = max(len(to_bin(i)) for i in used_moves)
-    if len(moves[0]) == 3:
-        n += 1
-
-    content = list(gen_fields(rnum, n - rnum))
-    print(len(content))
-
-    for i, (*_, t, u) in zip(content[:], moves):
-        t_n = to_bin(t, n)[n - 1 - num]
-        u_n = to_bin(u, n)[n - 1 - num]
-        content[i] = f_f(t_n, u_n)
-    return content
+indent, minipage, overline, subscript, subsection, vspace = Document.indent, Document.minipage, Document.overline, subscript, Document.subsection, Document.vspace
 
 
 def gen_input_table():
@@ -149,63 +126,6 @@ def gen_jk_flip_flops_table(moves):
     return Table(rows).gen_tabular()
 
 
-def gen_all_flip_flops_table(moves, f_f):
-    """ Function generates table of flip-flops.
-
-    :param moves: list of moves
-    :param f_f: flip-flop function
-    :return: string containing whole table
-    """
-    used_moves = sorted(set(sum(moves, ())))
-    n = max(len(to_bin(i)) for i in used_moves)
-    rows = [
-        [Table.multicolumn(n, 'Przerzutniki')],
-        [subscript(i, n - 1 - j) for j in range(n) for i in f_f.name]
-    ]
-
-    for *_, t, u in moves:
-        it = zip(to_bin(t, n), to_bin(u, n))
-        rows.append([f_f(*next(it)) for _ in range(n)])
-
-    return Table(rows).gen_tabular()
-
-
-def gen_flip_flop_header(f_f, num, cnum):
-    return [Table.multicolumn((1 << cnum) + 1, subscript(f_f.name, num))]
-
-
-def gen_flip_flop_table(moves, f_f, nn, num, rnum):
-    """ Function generates table ready to minimize.
-
-    :param moves: list of moves
-    :param f_f: type of flip-flop
-    :param num: number of column
-    :return: string containing whole table
-    """
-
-    content = gen_flip_flop_content(moves, f_f, num, rnum)
-
-    used_moves = set(sum(moves, ()))
-    n = max(len(to_bin(i)) for i in used_moves)
-    moves_ = len(moves[0]) == 3
-    if moves_:
-        n += 1
-
-    # print(content)
-    # print(content)
-
-    it_gray = gen_gray(rnum)
-    it_con = split(content, 1 << num)
-    rows = [
-        # [Table.multicolumn((1 << num) + 1, subscript(f_f.name, num))],
-        gen_flip_flop_header(f_f, nn, num),
-        (gen_header(rnum, num, moves_), *gen_gray(num)),
-        *([next(it_gray), *next(it_con)] for _ in range(1 << rnum))
-    ]
-
-    return Table(rows).gen_tabular()
-
-
 def change_negation(expression):
     """ Function changes sign / to overline.
 
@@ -233,13 +153,13 @@ def gen_boolean_function(moves, f_f, nn, num, rnum):
     if moves_:
         n += 1
 
-    print(n, num, rnum)
-    data = gen_flip_flop_content(moves, f_f, num, rnum)
+    # print(n, num, rnum)
+    data = KarnoughTable(moves, f_f, num, rnum).gen_karnough_content()
     # minterms, dontcares = get_minterms(data, fields)
     signals = [subscript('Q', n - 1 - i, True) for i in range(n)]
     if moves_:
         signals.insert(0, 'Z')
-    print(signals)
+    # print(signals)
     # minimized = minimize(minterms, dontcares, signals)
     fields = gen_fields(num, rnum)
     minimized = Minimization.from_data(fields, data, signals).get()
@@ -297,7 +217,7 @@ def gen_jk_tables(sorted_moves, full_moves, rnum):
     ))
 
 
-def gen_d_tables(sorted_moves, full_moves, rnum):
+def gen_d_tables(sorted_moves, full_moves, cnum):
     """ Function generates all tables with D flip-flops.
 
     :param sorted_moves: list of sorted moves
@@ -305,19 +225,21 @@ def gen_d_tables(sorted_moves, full_moves, rnum):
     :return: string in Latex syntax
     """
     # print('sor', sorted_moves)
-    print('full', full_moves)
-    print(len(full_moves))
+    # print('full', full_moves)
+    # print(len(full_moves))
     used_moves = set(sum(sorted_moves, ()))
     n = max(len(to_bin(i)) for i in used_moves)
     if len(sorted_moves[0]) == 3:
         n += 1
 
+    print(n)
     return '\n'.join((
         subsection('Tabela przejsc dla przerzutkow D'),
         gen_bin_moves_table(sorted_moves),
-        gen_all_flip_flops_table(sorted_moves, D),
+        # gen_all_flip_flops_table(sorted_moves, D),
+        FlipFlopTable(sorted_moves, D).gen_tabular(),
         vspace(), '',
-        subsection('Minimalizacja metoda Karnough dla przerzutkow D'),
+        subsection('Minimalizacja metoda Karnough dla przerzutnikow D'),
         indent, '',
         # *[
         #     minipage((
@@ -326,9 +248,10 @@ def gen_d_tables(sorted_moves, full_moves, rnum):
         #         gen_boolean_function(full_moves, D, n - 1 - i),
         #     )) for i in range(n)]
         minipage((
-            gen_flip_flop_table(full_moves, D, 4, n - rnum, rnum),
+            # gen_karnough_table(full_moves, D, 4, n - rnum, rnum),
+            KarnoughTable(full_moves, D, 4, cnum).gen_tabular(),
             vspace(.3), '',
-            gen_boolean_function(full_moves, D, 4, n - rnum, rnum)
+            # gen_boolean_function(full_moves, D, 4, n - rnum, rnum)
         )),
         # minipage((
         #     gen_flip_flop_table(full_moves, D, 1, rnum),
@@ -348,7 +271,7 @@ def gen_t_tables(sorted_moves, full_moves, rnum):
     return '\n'.join((
         subsection('Tabela przejsc dla przerzutkow T'),
         gen_bin_moves_table(sorted_moves),
-        gen_all_flip_flops_table(sorted_moves, T),
+        FlipFlopTable(sorted_moves, T).gen_tabular(),
         # vspace(), '',
         # subsection('Minimalizacja metoda Karnough dla przerzutkow T'),
         # indent, '',
@@ -446,7 +369,7 @@ def gen_tex_file_content(moves, f_f):
         gen_moves_table(sorted_moves),
         vspace(2), '',
 
-        ff_map[f_f](sorted_moves, full_moves, 3),
+        ff_map[f_f](sorted_moves, full_moves, 2),
         vspace(2), '',
     )).generate_tex()
 

@@ -29,17 +29,6 @@ class Document:
         return ('${}$', '{}')[isinside].format(result)
 
     @staticmethod
-    def subscript(big, small, isinside=False):
-        """ Function generatex syntax for subscript.
-
-        :param big: value which should be up and big
-        :param small: value which should be down and small
-        :return: string in Latex syntax
-        """
-        result = '{}_{{{}}}'.format(big, small)
-        return ('${}$', '{}')[isinside].format(result)
-
-    @staticmethod
     def vspace(width=1.):
         """ Function generates syntax for vertical space.
 
@@ -71,21 +60,30 @@ class Document:
         """
         return r'\subsection{{{}}}'.format(text)
 
-    @staticmethod
-    def gen_header(rnum, cnum, is_z=False):
-        """ Function generates header for flip-flop table.
 
-        :return: string in Latex syntax
-        """
-        subscript = Document.subscript
+def gen_header(rnum, cnum, is_z=False):
+    """ Function generates header for flip-flop table.
 
-        n = rnum + cnum - is_z
+    :return: string in Latex syntax
+    """
+    n = rnum + cnum - is_z
 
-        s = '{} / {}'.format('{}' * rnum, '{}' * cnum)
-        n_ = [subscript('Q', n - 1 - i) for i in range(n)]
-        if is_z:
-            n_.insert(0, 'Z')
-        return s.format(*n_)
+    s = '{} / {}'.format('{}' * rnum, '{}' * cnum)
+    n_ = [subscript('Q', n - 1 - i) for i in range(n)]
+    if is_z:
+        n_.insert(0, 'Z')
+    return s.format(*n_)
+
+
+def subscript(big, small, isinside=False):
+    """ Function generatex syntax for subscript.
+
+    :param big: value which should be up and big
+    :param small: value which should be down and small
+    :return: string in Latex syntax
+    """
+    result = '{}_{{{}}}'.format(big, small)
+    return ('${}$', '{}')[isinside].format(result)
 
 
 if __name__ == '__main__':

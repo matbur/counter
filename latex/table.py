@@ -3,7 +3,7 @@ class Table:
     __hline = r'\hline'
 
     def __init__(self, rows):
-        self.__rows = rows
+        self._rows = rows
 
     def __begin_tabular(self):
         """ Function generates opening tag for table.
@@ -11,7 +11,7 @@ class Table:
         :param width: number of column in table
         :return: string in Latex syntax
         """
-        tab = self.__rows
+        tab = self._rows
         num = max(len(i) for i in tab) or 1
         return r'\begin{tabular}{|' + 'c|' * num + '}'
 
@@ -26,7 +26,7 @@ class Table:
         return ' & '.join(row) + r' \\'
 
     def gen_rows(self):
-        rows = self.__rows
+        rows = self._rows
         return (self.gen_row(i) for i in rows)
 
     # TODO: change name to to_latex
@@ -54,7 +54,7 @@ class Table:
         return r'\multicolumn{{{}}}{{|c|}}{{{}}}'.format(width, value)
 
     def to_csv(self, sep=','):
-        rows = self.__rows
+        rows = self._rows
         return '\n'.join(sep.join(map(str, i)) for i in rows)
 
 
