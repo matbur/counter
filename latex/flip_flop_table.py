@@ -1,5 +1,5 @@
 # from latex import Table, subscript, to_bin
-from .common import to_bin, flatten
+from .common import flatten, to_bin
 from .document import subscript
 from .table import Table
 
@@ -9,22 +9,23 @@ class FlipFlopTable(Table):
         self.__moves = moves
         self.__f_f = f_f
         self._rows = None
+        self.__width = None
 
-        self.fill_rows()
+        self.__calc_width()
+        self.__fill_rows()
 
-    def fill_rows(self):
+    def __calc_width(self):
+        moves = self.__moves
+        used_moves = set(flatten(moves))
+        self.__width = len(to_bin(max(used_moves))) + int(len(moves[0]) == 3)
+
+    def __fill_rows(self):
         """ Function generates table of flip-flops.
-
-        :param moves: list of moves
-        :param f_f: flip-flop function
-        :return: string containing whole table
         """
         moves = self.__moves
         f_f = self.__f_f
-        # used_moves = sorted(set(sum(moves, ())))
-        used_moves = sorted(set(flatten(moves)))
-        # n = max(len(to_bin(i)) for i in used_moves)
-        n = len(to_bin(max(used_moves)))
+        n = self.__width
+
         rows = [
             [Table.multicolumn(n, 'Przerzutniki')],
             [subscript(i, n - 1 - j) for j in range(n) for i in f_f.name]
@@ -35,13 +36,3 @@ class FlipFlopTable(Table):
             rows.append([f_f(*next(it)) for _ in range(n)])
 
         self._rows = rows
-
-
-if __name__ == '__main__':
-    t = FlipFlopTable([
-        [1, 2],
-        [3, 4]
-    ])
-
-    print(t.gen_tabular())
-    print(t.to_csv())

@@ -154,7 +154,7 @@ def gen_boolean_function(moves, f_f, nn, num, rnum):
         n += 1
 
     # print(n, num, rnum)
-    data = KarnoughTable(moves, f_f, num, rnum).gen_karnough_content()
+    data = KarnoughTable(moves, f_f, num, rnum)
     # minterms, dontcares = get_minterms(data, fields)
     signals = [subscript('Q', n - 1 - i, True) for i in range(n)]
     if moves_:
