@@ -21,7 +21,7 @@ class KarnoughTable(Table):
     def __calc_width(self):
         moves = self.__moves
         used_moves = set(flatten(moves)) - {'*'}
-        self.__width = len(to_bin(max(used_moves))) + int(len(moves[0]) == 3)
+        self.__width = len(to_bin(max(used_moves))) + int(self.__is_z)
 
     def __gen_karnough_content(self):
         """ Function generates interior table to minimize for flip-flop.

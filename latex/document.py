@@ -8,8 +8,6 @@ class Document:
                          r'\begin{document}'
                          ))
     __footer = r'\end{document}'
-    qquad = r'$\qquad$'
-    indent = r'\indent'
 
     def __init__(self, items):
         self.__items = items
@@ -17,48 +15,52 @@ class Document:
     def generate_tex(self, sep='\n'):
         return sep.join((self.__begin, *self.__items, self.__footer))
 
-    @staticmethod
-    def overline(text, isinside=False):
-        """ Function generates syntax for overline.
 
-        :param text: value which should be overlined
-        :param isinside: if set don't add dollars signs
-        :return: string in Latex syntax
-        """
-        result = r'\overline{{{}}}'.format(text)
-        return ('${}$', '{}')[isinside].format(result)
+indent = r'\indent'
+qquad = r'$\qquad$'
 
-    @staticmethod
-    def vspace(width=1.):
-        """ Function generates syntax for vertical space.
 
-        :param width: numerical value of space
-        :return: string in Latex syntax
-        """
-        return r'\vspace{{{:.1f}em}}'.format(width)
+def minipage(content=(), num=2):
+    """ Function generates syntax for minipage.
 
-    @staticmethod
-    def minipage(content=(), num=2):
-        """ Function generates syntax for minipage.
+    :param content: text inside minipage
+    :param num: number of minipages
+    :return: string in Latex syntax
+    """
+    return '\n'.join((
+        r'\begin{{minipage}}[ht]{{{:.2f}\textwidth}}'.format(1. / num),
+        *content,
+        r'\end{minipage}'
+    ))
 
-        :param content: text inside minipage
-        :param num: number of minipages
-        :return: string in Latex syntax
-        """
-        return '\n'.join((
-            r'\begin{{minipage}}[ht]{{{:.2f}\textwidth}}'.format(1. / num),
-            *content,
-            r'\end{minipage}'
-        ))
 
-    @staticmethod
-    def subsection(text=''):
-        """ Function generates syntax for subsection.
+def vspace(width=1.):
+    """ Function generates syntax for vertical space.
 
-        :param text: content of subsection
-        :return: string in Latex syntax
-        """
-        return r'\subsection{{{}}}'.format(text)
+    :param width: numerical value of space
+    :return: string in Latex syntax
+    """
+    return r'\vspace{{{:.1f}em}}'.format(width)
+
+
+def subsection(text=''):
+    """ Function generates syntax for subsection.
+
+    :param text: content of subsection
+    :return: string in Latex syntax
+    """
+    return r'\subsection{{{}}}'.format(text)
+
+
+def overline(text, isinside=False):
+    """ Function generates syntax for overline.
+
+    :param text: value which should be overlined
+    :param isinside: if set don't add dollars signs
+    :return: string in Latex syntax
+    """
+    result = r'\overline{{{}}}'.format(text)
+    return ('${}$', '{}')[isinside].format(result)
 
 
 def gen_header(rnum, cnum, is_z=False):

@@ -17,7 +17,7 @@ class FlipFlopTable(Table):
     def __calc_width(self):
         moves = self.__moves
         used_moves = set(flatten(moves))
-        self.__width = len(to_bin(max(used_moves))) + int(len(moves[0]) == 3)
+        self.__width = len(to_bin(max(used_moves)))
 
     def __fill_rows(self):
         """ Function generates table of flip-flops.
@@ -27,12 +27,17 @@ class FlipFlopTable(Table):
         n = self.__width
 
         rows = [
-            [Table.multicolumn(n, 'Przerzutniki')],
+            [Table.multicolumn(n * len(f_f.name), 'Przerzutniki')],
             [subscript(i, n - 1 - j) for j in range(n) for i in f_f.name]
         ]
 
         for *_, t, u in moves:
             it = zip(to_bin(t, n), to_bin(u, n))
-            rows.append([f_f(*next(it)) for _ in range(n)])
+            l = [f_f(*next(it)) for _ in range(n)]
+
+            if isinstance(l[0], tuple):
+                l = flatten(l)
+
+            rows.append(l)
 
         self._rows = rows

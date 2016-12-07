@@ -49,6 +49,7 @@ def K(t, u):
     return ('*', 1 - u)[t]
 
 
+@add_name
 def JK(t, u):
     """ Returns combined result of J and K as tuple.
     """
