@@ -1,5 +1,6 @@
 """
 """
+
 from itertools import chain
 from typing import Iterable
 
@@ -17,10 +18,6 @@ def split(iterable: Iterable, width=4):
         yield [next(it) for _ in range(width)]
 
 
-if __name__ == '__main__':
-    it = split(i for i in range(10))
-
-
 def gen_gray(width=2, isbin=True):
     """ Generator yields successive Gray numbers.
 
@@ -36,7 +33,7 @@ def gen_fields(r_num: int, c_num=2):
     """ Generator yields order in table for flip-flops.
 
     :param r_num: number of rows
-    :param c_num: number of cols
+    :param c_num: number of columns
     """
     rows = gen_gray(r_num, False)
     cols = tuple(gen_gray(c_num, False))
@@ -47,6 +44,10 @@ def gen_fields(r_num: int, c_num=2):
             yield fac * row + col
 
 
-def flatten(listOfLists):
-    "Flatten one level of nesting"
-    return tuple(chain.from_iterable(listOfLists))
+def flatten(list_of_lists: Iterable):
+    """ Flatten one level of nesting.
+
+    :type list_of_lists:
+    :return: flattened tuple
+    """
+    return tuple(chain.from_iterable(list_of_lists))

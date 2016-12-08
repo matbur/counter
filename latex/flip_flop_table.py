@@ -1,7 +1,11 @@
-# from latex import Table, subscript, to_bin
+"""
+"""
+
+from typing import Iterable
+
 from .common import flatten, to_bin
 from .document import subscript
-from .table import Table
+from .table import Table, multicolumn
 
 
 class FlipFlopTable(Table):
@@ -19,23 +23,32 @@ class FlipFlopTable(Table):
         used_moves = set(flatten(moves))
         self.__width = len(to_bin(max(used_moves)))
 
+    def __gen_header(self):
+        f_f = self.__f_f
+        n = self.__width
+        return [multicolumn(n * len(f_f.name), 'Przerzutniki')]
+
+    def __gen_signals(self):
+        f_f = self.__f_f
+        n = self.__width
+        return [subscript(i, n - 1 - j) for j in range(n) for i in f_f.name]
+
     def __fill_rows(self):
         """ Function generates table of flip-flops.
         """
         moves = self.__moves
         f_f = self.__f_f
         n = self.__width
+        header = self.__gen_header()
+        signals = self.__gen_signals()
 
-        rows = [
-            [Table.multicolumn(n * len(f_f.name), 'Przerzutniki')],
-            [subscript(i, n - 1 - j) for j in range(n) for i in f_f.name]
-        ]
+        rows = [header, signals]
 
         for *_, t, u in moves:
             it = zip(to_bin(t, n), to_bin(u, n))
             l = [f_f(*next(it)) for _ in range(n)]
 
-            if isinstance(l[0], tuple):
+            if isinstance(l[0], Iterable):
                 l = flatten(l)
 
             rows.append(l)

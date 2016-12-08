@@ -1,3 +1,6 @@
+"""
+"""
+
 from minimization import Minimization, to_bin
 from .common import flatten
 from .document import overline, subscript
@@ -14,7 +17,15 @@ class BooleanFunction(Minimization):
         self.change_negation()
 
     @classmethod
-    def foo(cls, moves, f_f, num, signals=None):
+    def from_moves(cls, moves, f_f, num, signals=None):
+        """
+
+        :param moves:
+        :param f_f:
+        :param num:
+        :param signals:
+        :return:
+        """
         minterms = []
         dontcares = []
 
@@ -46,17 +57,17 @@ class BooleanFunction(Minimization):
         self.__width = len(to_bin(max(used_moves))) + int(len(moves[0]) == 3)
 
     def get(self):
-        return '${} = {}$'.format(subscript(self.__f_f.name, self.__num, True), self.changed)
+        f_f = self.__f_f
+        num = self.__num
+        changed = self.changed
+        return '${} = {}$'.format(subscript(f_f.name, num, True), changed)
 
     def change_negation(self):
         """ Function changes sign / to overline.
-
-        :param expression: boolean expression as string
-        :return: changed expression
         """
+        function = self.function.split('/')
 
-        l = self.function.split('/')
-        for i, v in enumerate(l[1:], 1):
-            l[i] = overline(v[0], True) + v[1:]
+        for i, v in enumerate(function[1:], 1):
+            function[i] = overline(v[0], True) + v[1:]
 
-        self.changed = ''.join(l)
+        self.changed = ''.join(function)

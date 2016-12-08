@@ -13,6 +13,11 @@ class Document:
         self.__items = items
 
     def generate_tex(self, sep='\n'):
+        """ Method generates whole Latex document.
+
+        :param sep: separator between items
+        :return: string in Latex syntax
+        """
         return sep.join((self.__begin, *self.__items, self.__footer))
 
 
@@ -52,42 +57,41 @@ def subsection(text=''):
     return r'\subsection{{{}}}'.format(text)
 
 
-def overline(text, isinside=False):
+def overline(text, is_inside=False):
     """ Function generates syntax for overline.
 
     :param text: value which should be overlined
-    :param isinside: if set don't add dollars signs
+    :param is_inside: if set don't add dollars signs
     :return: string in Latex syntax
     """
     result = r'\overline{{{}}}'.format(text)
-    return ('${}$', '{}')[isinside].format(result)
+    return ('${}$', '{}')[is_inside].format(result)
 
 
-def gen_header(rnum, cnum, is_z=False):
+def gen_header(r_num: int, c_num: int, is_z=False):
     """ Function generates header for flip-flop table.
 
+    :param r_num: number of rows
+    :param c_num: number of columns
+    :param is_z: bool, if True add Z signal
     :return: string in Latex syntax
     """
-    n = rnum + cnum - is_z
+    n = r_num + c_num - is_z
 
-    s = '{} / {}'.format('{}' * rnum, '{}' * cnum)
+    s = '{} / {}'.format('{}' * r_num, '{}' * c_num)
     n_ = [subscript('Q', n - 1 - i) for i in range(n)]
     if is_z:
         n_.insert(0, 'Z')
     return s.format(*n_)
 
 
-def subscript(big, small, isinside=False):
-    """ Function generatex syntax for subscript.
+def subscript(big, small, is_inside=False):
+    """ Function generates syntax for subscript.
 
     :param big: value which should be up and big
     :param small: value which should be down and small
+    :param is_inside: bool, if True add $ at begin and end
     :return: string in Latex syntax
     """
     result = '{}_{{{}}}'.format(big, small)
-    return ('${}$', '{}')[isinside].format(result)
-
-
-if __name__ == '__main__':
-    d = Document(['1', '2', '3'])
-    print(d.generate_tex())
+    return ('${}$', '{}')[is_inside].format(result)
