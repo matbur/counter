@@ -36,17 +36,16 @@ def gen_output_table():
     return Table(rows).to_latex()
 
 
-def gen_states_table(moves):
+def gen_states_table(moves, width):
     """ Function generates table with states.
 
     :param moves: list of used states
+    :param width: width of max move
     :return: string in Latex syntax
     """
-    moves = sorted(set(moves))
-    n = max(len(to_bin(i)) for i in moves)
     rows = (
-        [subscript('Q', n - 1 - i) for i in range(n)],
-        *[(subscript('q', i), *to_bin(i, n)) for i in moves]
+        [subscript('Q', width - 1 - i) for i in range(width)],
+        *[(subscript('q', i), *to_bin(i, width)) for i in moves]
     )
     rows[0].insert(0, '')
 
@@ -150,7 +149,7 @@ def gen_tex_file_content(moves, f_f, c_num):
             gen_output_table(),
         ), 3),
         minipage((
-            gen_states_table(used_moves),
+            gen_states_table(used_moves, width),
         ), 3),
         vspace(), '',
 

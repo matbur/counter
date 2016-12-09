@@ -1,9 +1,9 @@
 import unittest
 
-from latex import change_negation, gen_gray, gen_row, gen_tabular, split
+from latex.common import flatten, gen_fields, gen_gray, split
 
 
-class TestLogic(unittest.TestCase):
+class TestCommon(unittest.TestCase):
     def test_split(self):
         lst = list(range(10))
         self.assertEqual(list(split(lst)), [[0, 1, 2, 3], [4, 5, 6, 7]])
@@ -24,22 +24,16 @@ class TestLogic(unittest.TestCase):
         self.assertEqual(list(gen_gray(2, False)), [0, 1, 3, 2])
         self.assertEqual(list(gen_gray(3, False)), [0, 1, 3, 2, 6, 7, 5, 4])
 
-    def test_gen_row(self):
-        self.assertEqual(gen_row(['a']), r'a \\')
-        self.assertEqual(gen_row(['a', 'b']), r'a & b \\')
-        self.assertEqual(gen_row([1, 2, 3]), r'1 & 2 & 3 \\')
+    def test_gen_fields(self):
+        self.assertEqual(list(gen_fields(1, 1)), [0, 1, 2, 3])
+        self.assertEqual(list(gen_fields(1, 2)), [0, 1, 3, 2, 4, 5, 7, 6])
+        self.assertEqual(list(gen_fields(2, 1)), [0, 1, 2, 3, 6, 7, 4, 5])
+        self.assertEqual(list(gen_fields(2, 2)), [0, 1, 3, 2, 4, 5, 7, 6,
+                                                  12, 13, 15, 14, 8, 9, 11, 10])
 
-    def test_gen_tabular(self):
-        self.assertEqual(gen_tabular([['row']]), r'\begin{tabular}{|c|} \hline row \\ \hline \end{tabular}')
-        self.assertEqual(gen_tabular([['col1', 'col2']]),
-                         r'\begin{tabular}{|c|c|} \hline col1 & col2 \\ \hline \end{tabular}')
-        self.assertEqual(gen_tabular([['row1'], ['row2']]),
-                         r'\begin{tabular}{|c|} \hline row1 \\ \hline row2 \\ \hline \end{tabular}')
-
-    def test_change_negation(self):
-        self.assertEqual(change_negation(''), '')
-        self.assertEqual(change_negation('a/bc'), r'a\overline{b}c')
-        self.assertEqual(change_negation('xy'), r'xy')
+    def test_flatten(self):
+        self.assertEqual(flatten([[1]]), (1,))
+        self.assertEqual(flatten([[1], [2], [3]]), (1, 2, 3))
 
 
 if __name__ == '__main__':

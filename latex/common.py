@@ -2,7 +2,6 @@
     which are used in rest of project.
 """
 
-from itertools import chain
 from typing import Iterable
 
 from minimization import to_bin
@@ -30,7 +29,7 @@ def gen_gray(width=2, isbin=True):
         yield (gray, bin_gray)[isbin]
 
 
-def gen_fields(r_num: int, c_num=2):
+def gen_fields(r_num: int, c_num: int):
     """ Generator yields order in table for flip-flops.
 
     :param r_num: number of rows
@@ -51,4 +50,4 @@ def flatten(list_of_lists: Iterable):
     :type list_of_lists:
     :return: flattened tuple
     """
-    return tuple(chain.from_iterable(list_of_lists))
+    return tuple(i for j in list_of_lists for i in j)
