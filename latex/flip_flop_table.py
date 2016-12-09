@@ -1,4 +1,4 @@
-"""
+""" Module contains class which represents table with flip-flop moves.
 """
 
 from typing import Iterable
@@ -9,48 +9,53 @@ from .table import Table, multicolumn
 
 
 class FlipFlopTable(Table):
-    def __init__(self, moves, f_f):
-        self.__moves = moves
+    def __init__(self, moves, width, f_f):
+        super().__init__([], moves, width)
         self.__f_f = f_f
-        self._rows = None
-        self.__width = None
 
-        self.__calc_width()
+        self.__fill_header()
+        self.__fill_sub_header()
+        self.__fill_content()
         self.__fill_rows()
 
-    def __calc_width(self):
-        moves = self.__moves
-        used_moves = set(flatten(moves))
-        self.__width = len(to_bin(max(used_moves)))
-
-    def __gen_header(self):
-        f_f = self.__f_f
-        n = self.__width
-        return [multicolumn(n * len(f_f.name), 'Przerzutniki')]
-
-    def __gen_signals(self):
-        f_f = self.__f_f
-        n = self.__width
-        return [subscript(i, n - 1 - j) for j in range(n) for i in f_f.name]
-
-    def __fill_rows(self):
-        """ Function generates table of flip-flops.
+    def __fill_header(self):
+        """ Method fills header in table.
         """
-        moves = self.__moves
         f_f = self.__f_f
-        n = self.__width
-        header = self.__gen_header()
-        signals = self.__gen_signals()
+        width = self._width
+        self._header = [multicolumn(width * len(f_f.name), 'Przerzutniki')]
 
-        rows = [header, signals]
+    def __fill_sub_header(self):
+        """ Method fills sub header in table.
+        """
+        f_f = self.__f_f
+        width = self._width
+        self._sub_header = [subscript(i, width - 1 - j) for j in range(width) for i in f_f.name]
 
+    def __fill_content(self):
+        """ Method fills content of table.
+        """
+        f_f = self.__f_f
+        moves = self._moves
+        width = self._width
+
+        content = []
         for *_, t, u in moves:
-            it = zip(to_bin(t, n), to_bin(u, n))
-            l = [f_f(*next(it)) for _ in range(n)]
+            it = zip(to_bin(t, width), to_bin(u, width))
+            l = [f_f(*next(it)) for _ in range(width)]
 
             if isinstance(l[0], Iterable):
                 l = flatten(l)
 
-            rows.append(l)
+            content.append(l)
 
-        self._rows = rows
+        self._content = content
+
+    def __fill_rows(self):
+        """ Method fills rows in table.
+        """
+        header = self._header
+        sub_header = self._sub_header
+        content = self._content
+
+        self._rows = [header, sub_header, *content]

@@ -1,4 +1,4 @@
-""" Module contains latex parts which are used to create latex file.
+""" Module contains latex parts which are used to create Latex file.
 """
 
 
@@ -18,7 +18,11 @@ class Document:
         :param sep: separator between items
         :return: string in Latex syntax
         """
-        return sep.join((self.__begin, *self.__items, self.__footer))
+        begin = self.__begin
+        items = self.__items
+        footer = self.__footer
+
+        return sep.join((begin, *items, footer))
 
 
 indent = r'\indent'
@@ -79,10 +83,10 @@ def gen_header(r_num: int, c_num: int, is_z=False):
     n = r_num + c_num - is_z
 
     s = '{} / {}'.format('{}' * r_num, '{}' * c_num)
-    n_ = [subscript('Q', n - 1 - i) for i in range(n)]
+    header = [subscript('Q', n - 1 - i) for i in range(n)]
     if is_z:
-        n_.insert(0, 'Z')
-    return s.format(*n_)
+        header.insert(0, 'Z')
+    return s.format(*header)
 
 
 def subscript(big, small, is_inside=False):

@@ -1,4 +1,5 @@
-"""
+""" Module contains functions and generators
+    which are used in rest of project.
 """
 
 from itertools import chain

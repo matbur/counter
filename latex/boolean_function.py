@@ -1,8 +1,7 @@
-"""
+""" Module contains class which represents boolean function.
 """
 
 from minimization import Minimization, to_bin
-from .common import flatten
 from .document import overline, subscript
 
 
@@ -11,20 +10,20 @@ class BooleanFunction(Minimization):
         super().__init__(minterms, dontcares, signals)
         self.changed = None
         self.__f_f = f_f
-        self.__width = None
         self.__num = num
 
-        self.change_negation()
+        self.__change_negation()
 
     @classmethod
-    def from_moves(cls, moves, f_f, num, signals=None):
-        """
+    def from_moves(cls, moves, width, f_f, num, signals=None):
+        """ Method creates instance of class from given moves.
 
-        :param moves:
-        :param f_f:
-        :param num:
-        :param signals:
-        :return:
+        :param moves: list of moves
+        :param width: width of max move
+        :param f_f: type of flip-flop
+        :param num: number of flip-flop
+        :param signals: names of signals
+        :return: class instance
         """
         minterms = []
         dontcares = []
@@ -34,35 +33,33 @@ class BooleanFunction(Minimization):
             '*': dontcares,
             0: []
         }
-        used_moves = set(flatten(moves)) - {'*'}
-        n = len(to_bin(max(used_moves)))
 
         is_z = len(moves[0]) == 3
 
         for i, (*_, t, u) in enumerate(moves):
-            tt = to_bin(t, n)[n - 1 - num]
-            uu = to_bin(u, n)[n - 1 - num]
+            tt = to_bin(t, width)[width - 1 - num]
+            uu = to_bin(u, width)[width - 1 - num]
             ii = f_f(tt, uu)
             list_map[ii].append(i)
 
         if signals is None:
-            signals = [subscript('Q', n - 1 - i, True) for i in range(n)]
+            signals = [subscript('Q', width - 1 - i, True) for i in range(width)]
             if is_z:
                 signals.insert(0, 'Z')
+
         return cls(minterms, dontcares, signals, f_f, num)
 
-    def __calc_width(self):
-        moves = self.minterms + self.dontcares
-        used_moves = set(moves) - {'*'}
-        self.__width = len(to_bin(max(used_moves))) + int(len(moves[0]) == 3)
-
     def get(self):
+        """ Method returns boolean function in Latex syntax.
+
+        :return: string with function
+        """
         f_f = self.__f_f
         num = self.__num
         changed = self.changed
         return '${} = {}$'.format(subscript(f_f.name, num, True), changed)
 
-    def change_negation(self):
+    def __change_negation(self):
         """ Function changes sign / to overline.
         """
         function = self.function.split('/')

@@ -1,50 +1,55 @@
+""" Module contains class which represents table with binary moves.
+"""
+
 from minimization import to_bin
-from .common import flatten
 from .document import subscript
 from .table import Table, multicolumn
 
 
 class BinaryTable(Table):
-    def __init__(self, moves, signals='QQ'):
-        self.__moves = moves
+    def __init__(self, moves, width, signals='QQ'):
+        super().__init__([], moves, width)
         self.__signals = signals
-        self.__width = None
-        self._rows = None
 
-        self.__calc_width()
+        self.__fill_header()
+        self.__fill_sub_header()
+        self.__fill_content()
         self.__fill_rows()
 
-    def __calc_width(self):
-        moves = self.__moves
-        used_moves = set(flatten(moves))
-        self.__width = len(to_bin(max(used_moves)))
+    def __fill_header(self, arg=('t', 't+1')):
+        """ Method fills header in table.
 
-    def __gen_header(self, arg=('t', 't+1')):
-        width = self.__width
-        return [multicolumn(width, i) for i in arg]
+        :param arg: content of two multi columns
+        """
+        width = self._width
 
-    def __gen_signals(self):
+        self._header = [multicolumn(width, i) for i in arg]
+
+    def __fill_sub_header(self):
+        """ Method fills sub header in table.
+        """
         signals = self.__signals
-        width = self.__width
-        return [subscript(j, width - 1 - i) for j in signals for i in range(width)]
+        width = self._width
 
-    def __gen_content(self):
-        moves = self.__moves
-        width = self.__width
-        return [(*z, *to_bin(t, width), *to_bin(u, width)) for *z, t, u in moves]
+        self._sub_header = [subscript(j, width - 1 - i) for j in signals for i in range(width)]
+
+    def __fill_content(self):
+        """ Method fills content of table.
+        """
+        moves = self._moves
+        width = self._width
+
+        self._content = [(*z, *to_bin(t, width), *to_bin(u, width)) for *z, t, u in moves]
 
     def __fill_rows(self):
-        """ Function generates table of moves in binary system with 2 or 3 column.
-
-        :return: string containing whole table
+        """ Method fills rows in table.
         """
-        moves = self.__moves
+        header = self._header
+        sub_header = self._sub_header
+        content = self._content
+        moves = self._moves
 
-        header = self.__gen_header()
-        signals = self.__gen_signals()
-        content = self.__gen_content()
-
-        rows = [header, signals, *content]
+        rows = [header, sub_header, *content]
 
         if len(moves[0]) == 3:
             rows[0].insert(0, '')

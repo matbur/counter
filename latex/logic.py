@@ -1,5 +1,6 @@
 """ Module contains logic to create latex file.
 """
+
 from minimization import D, J, JK, K, to_bin
 from .binary_table import BinaryTable
 from .boolean_function import BooleanFunction
@@ -69,57 +70,54 @@ def gen_moves_table(moves):
     return Table(rows).to_latex()
 
 
-def gen_jk_tables(sorted_moves, full_moves, c_num):
+def gen_jk_tables(sorted_moves, full_moves, width, c_num):
     """ Function generates all tables with JK flip-flops.
 
     :param sorted_moves: list of sorted moves
     :param full_moves: complete list of moves
-    :param c_num:
+    :param width: width of max move
+    :param c_num: number of columns in Karnough tables
     :return: string in Latex syntax
     """
-    used_moves = set(sum(sorted_moves, ()))
-    n = max(len(to_bin(i)) for i in used_moves)
-
     return '\n'.join((
         subsection('Tabela przejsc dla przerzutnikow JK'),
-        BinaryTable(sorted_moves).to_latex(),
-        FlipFlopTable(sorted_moves, JK).to_latex(),
+        BinaryTable(sorted_moves, width).to_latex(),
+        FlipFlopTable(sorted_moves, width, JK).to_latex(),
         vspace(), '',
         subsection('Minimalizacja metoda Karnough dla przerzutnikow JK'),
         indent,
         *[minipage((
-            KarnoughTable(full_moves, ff, n - 1 - i, c_num).to_latex(),
+            KarnoughTable(full_moves, width, f_f, width - 1 - i, c_num).to_latex(),
             vspace(.3), '',
-            BooleanFunction.from_moves(full_moves, ff, n - 1 - i).get(),
+            BooleanFunction.from_moves(full_moves, width, f_f, width - 1 - i).get(),
             vspace(), '',
-        )) for i in range(n) for ff in (J, K)]
+        )) for i in range(width) for f_f in (J, K)]
     ))
 
 
-def gen_d_tables(sorted_moves, full_moves, c_num):
+def gen_d_tables(sorted_moves, full_moves, width, c_num):
     """ Function generates all tables with D flip-flops.
 
     :param sorted_moves: list of sorted moves
     :param full_moves: complete list of moves
-    :param c_num:
+    :param width: width of max move
+    :param c_num: number of columns in Karnough tables
     :return: string in Latex syntax
     """
-    used_moves = set(sum(sorted_moves, ()))
-    n = max(len(to_bin(i)) for i in used_moves)
 
     return '\n'.join((
         subsection('Tabela przejsc dla przerzutnikow D'),
-        BinaryTable(sorted_moves).to_latex(),
-        FlipFlopTable(sorted_moves, D).to_latex(),
+        BinaryTable(sorted_moves, width).to_latex(),
+        FlipFlopTable(sorted_moves, width, D).to_latex(),
         vspace(), '',
         subsection('Minimalizacja metoda Karnough dla przerzutnikow D'),
         indent,
         *[minipage((
-            KarnoughTable(full_moves, D, n - 1 - i, c_num).to_latex(),
+            KarnoughTable(full_moves, width, D, width - 1 - i, c_num).to_latex(),
             vspace(.3), '',
-            BooleanFunction.from_moves(full_moves, D, n - 1 - i).get(),
+            BooleanFunction.from_moves(full_moves, width, D, width - 1 - i).get(),
             vspace(), '',
-        )) for i in range(n)]
+        )) for i in range(width)]
     ))
 
 
@@ -128,7 +126,7 @@ def gen_tex_file_content(moves, f_f, c_num):
 
     :param moves: list of tuples (Z, from, to)
     :param f_f: type of flip-flop
-    :param c_num:
+    :param c_num: number of columns in Karnough tables
     :return: string in Latex syntax
     """
     ff_map = {
@@ -138,9 +136,9 @@ def gen_tex_file_content(moves, f_f, c_num):
         # '': gen_none_tables
     }
     sorted_moves = sorted(moves)
-    full_moves = complete_moves(moves)
-
     used_moves = sum([i[1:] for i in sorted_moves], ())
+    width = len(to_bin(max(used_moves)))
+    full_moves = complete_moves(moves, width)
 
     return Document((
         '',
@@ -160,37 +158,35 @@ def gen_tex_file_content(moves, f_f, c_num):
         gen_moves_table(sorted_moves),
         vspace(2), '',
 
-        ff_map[f_f](sorted_moves, full_moves, c_num),
+        ff_map[f_f](sorted_moves, full_moves, width, c_num),
         vspace(2), '',
     )).generate_tex()
 
 
-def complete_moves(moves):
+def complete_moves(moves, width):
     """ Function fills missing moves with '*'.
 
     :param moves: list of moves
+    :param width: width of max move
     :return: completed, sorted list of moves
     """
 
-    used_moves = set(sum(moves, ()))
-    n = len(to_bin(max(used_moves)))
-
-    missing = set(range(1 << n)) - set(i[-2] for i in moves)
+    missing = set(range(1 << width)) - set(i[-2] for i in moves)
     num = len(moves[0])
 
     completed = {
         2: complete_moves2,
         3: complete_moves3,
-    }[num](moves, missing)
+    }[num](moves, missing, width)
 
     return sorted(completed)
 
 
-def complete_moves2(moves, missing_moves):
+def complete_moves2(moves, missing_moves, _=None):
     """ Function fills missing_moves moves with '*'.
 
     :param moves: list of moves
-    :param missing_moves:
+    :param missing_moves: set with missing moves
     :return: completed list of moves
     """
     completed = list(moves)
@@ -200,24 +196,22 @@ def complete_moves2(moves, missing_moves):
     return completed
 
 
-def complete_moves3(moves, missing_moves):
+def complete_moves3(moves, missing_moves, width):
     """ Function fills missing moves with '*'.
 
     :param moves: list of moves
-    :param missing_moves:
+    :param missing_moves: set with missing moves
+    :param width: width of max move
     :return: completed list of moves
     """
     completed = list(moves)
-
-    used_moves = set(sum(moves, ()))
-    n = len(to_bin(max(used_moves)))
 
     for i in missing_moves:
         completed.append((0, i, '*'))
         completed.append((1, i, '*'))
 
     d = {i[:2] for i in completed}
-    a = {(i, j) for i in range(2) for j in range(1 << n)}
+    a = {(i, j) for i in range(2) for j in range(1 << width)}
     for _, t, u in list(completed):
         for _, i in a - d:
             if t != i:
