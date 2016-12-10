@@ -1,3 +1,6 @@
+""" Module contains class which minimizes boolean function.
+"""
+
 from .petricks import Petricks
 from .quine_mccluskey import QuineMcCluskey
 
@@ -22,6 +25,7 @@ class Minimization:
         :param signals: names of signals
         :return: class instance
         """
+        order = list(order)
         minterms = []
         dontcares = []
         list_map = {

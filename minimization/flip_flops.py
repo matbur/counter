@@ -8,6 +8,11 @@
 
 
 def add_name(func):
+    """ Decorator add new attribute to function.
+
+    :param func: function which needs new attribute
+    :return: function
+    """
     func.name = func.__name__
     return func
 
@@ -44,6 +49,7 @@ def K(t, u):
     return ('*', 1 - u)[t]
 
 
+@add_name
 def JK(t, u):
     """ Returns combined result of J and K as tuple.
     """

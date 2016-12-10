@@ -1,3 +1,7 @@
+""" Module contains common functions for both minimization methods.
+"""
+
+
 def to_bin(value, width=0):
     """ Function generates formatted int to bin.
 

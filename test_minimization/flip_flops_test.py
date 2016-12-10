@@ -24,6 +24,9 @@ class TestFlipFlops(unittest.TestCase):
         self.assertEqual(J('*', '1'), '*')
         self.assertEqual(J('1', '*'), '*')
 
+    def test_J_for_name(self):
+        self.assertEqual(J.name, 'J')
+
     def test_K_for_int(self):
         self.assertEqual(K(0, 0), '*')
         self.assertEqual(K(0, 1), '*')
@@ -43,6 +46,9 @@ class TestFlipFlops(unittest.TestCase):
         self.assertEqual(K('0', '*'), '*')
         self.assertEqual(K('*', '1'), '*')
         self.assertEqual(K('1', '*'), '*')
+
+    def test_K_for_name(self):
+        self.assertEqual(K.name, 'K')
 
     def test_JK_for_int(self):
         self.assertEqual(JK(0, 0), (0, '*'))
@@ -89,6 +95,9 @@ class TestFlipFlops(unittest.TestCase):
         self.assertEqual(D('*', '1'), '*')
         self.assertEqual(D('1', '*'), '*')
 
+    def test_D_for_name(self):
+        self.assertEqual(D.name, 'D')
+
     def test_T_for_int(self):
         self.assertEqual(T(0, 0), 0)
         self.assertEqual(T(0, 1), 1)
@@ -108,6 +117,9 @@ class TestFlipFlops(unittest.TestCase):
         self.assertEqual(T('0', '*'), '*')
         self.assertEqual(T('*', '1'), '*')
         self.assertEqual(T('1', '*'), '*')
+
+    def test_T_for_name(self):
+        self.assertEqual(T.name, 'T')
 
 
 if __name__ == '__main__':

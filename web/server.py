@@ -7,6 +7,13 @@ app = Flask(__name__)
 app.secret_key = 'very secret key'
 
 
+def foo(form):
+    def bar(x, y):
+        return getattr(form, 'move_{}_{}'.format(x, y))(maxlength=2)
+
+    return bar
+
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     form = MovesForm(request.form)
@@ -16,8 +23,9 @@ def index():
 
     print(request.remote_addr, filename)
     if filename is None:
-        resp.set_cookie('file', random_filename())
-        return resp
+        filename = random_filename()
+        resp.set_cookie('file', filename)
+        # return resp
 
     filename = 'static/generated/' + filename
 
@@ -27,6 +35,13 @@ def index():
         decide(data, ff_type, filename)
 
     return resp
+
+
+@app.route('/form')
+def wtf_form():
+    form = MovesForm(request.form)
+    return render_template('form.html', form=form,
+                           foo=foo(form))
 
 
 @app.route('/file.<ext>')

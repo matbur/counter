@@ -1,6 +1,7 @@
 """ Module contains class which runs Quine-McCluskey algorithm.
     more information:  https://en.wikipedia.org/wiki/Quine-McCluskey_algorithm
 """
+
 import itertools
 
 from .common import bin_len, to_bin
