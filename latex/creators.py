@@ -6,17 +6,16 @@ import subprocess
 from .logic import gen_tex_file_content
 
 
-def create_tex_file(moves, ff_type, c_num, file='file.tex'):
+def create_tex_file(moves, ff_type, file='file.tex'):
     """ Function creates tex file from given moves.
 
     :param moves: list of tuples (Z, from, to)
     :param ff_type: type of flip-flop
-    :param c_num: number of columns
     :param file: name of the tex file
     :return: error or None
     """
 
-    to_write = gen_tex_file_content(moves, ff_type, c_num)
+    to_write = gen_tex_file_content(moves, ff_type)
 
     try:
         with open(file, 'w') as f:

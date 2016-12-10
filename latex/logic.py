@@ -1,7 +1,7 @@
 """ Module contains logic to create latex file.
 """
 
-from minimization import D, J, JK, K, to_bin
+from minimization import D, J, JK, K, T, to_bin
 from .binary_table import BinaryTable
 from .boolean_function import BooleanFunction
 from .document import Document, indent, minipage, subscript, subsection, vspace
@@ -120,24 +120,50 @@ def gen_d_tables(sorted_moves, full_moves, width, c_num):
     ))
 
 
-def gen_tex_file_content(moves, f_f, c_num):
+def gen_t_tables(sorted_moves, full_moves, width, c_num):
+    """ Function generates all tables with T flip-flops.
+
+    :param sorted_moves: list of sorted moves
+    :param full_moves: complete list of moves
+    :param width: width of max move
+    :param c_num: number of columns in Karnough tables
+    :return: string in Latex syntax
+    """
+
+    return '\n'.join((
+        subsection('Tabela przejsc dla przerzutnikow T'),
+        BinaryTable(sorted_moves, width).to_latex(),
+        FlipFlopTable(sorted_moves, width, T).to_latex(),
+        vspace(), '',
+        subsection('Minimalizacja metoda Karnough dla przerzutnikow T'),
+        indent,
+        *[minipage((
+            KarnoughTable(full_moves, width, T, width - 1 - i, c_num).to_latex(),
+            vspace(.3), '',
+            BooleanFunction.from_moves(full_moves, width, T, width - 1 - i).get(),
+            vspace(), '',
+        )) for i in range(width)]
+    ))
+
+
+def gen_tex_file_content(moves, f_f):
     """ Function generates content of tex file from given moves.
 
     :param moves: list of tuples (Z, from, to)
     :param f_f: type of flip-flop
-    :param c_num: number of columns in Karnough tables
     :return: string in Latex syntax
     """
     ff_map = {
         'jk': gen_jk_tables,
         'd': gen_d_tables,
-        # 't': gen_t_tables,
-        # '': gen_none_tables
+        't': gen_t_tables,
     }
     sorted_moves = sorted(moves)
-    used_moves = sum([i[1:] for i in sorted_moves], ())
+    used_moves = sorted(set(sum([i[-2:] for i in sorted_moves], ())))
     width = len(to_bin(max(used_moves)))
+    is_z = len(moves[0]) == 3
     full_moves = complete_moves(moves, width)
+    c_num = min((width + is_z) // 2, 2)
 
     return Document((
         '',

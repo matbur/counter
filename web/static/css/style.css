@@ -23,14 +23,18 @@ th, td {
     width: 50px;
 }
 
-input {
+td > input {
     text-align: center;
-    width: 30px;
+    width: 40px;
 }
 
 input.submit {
     width: 100%;
     margin: 0 0 10px;
+}
+
+#inp {
+    width: 50px;
 }
 
 .jumbotron {

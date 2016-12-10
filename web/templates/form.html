@@ -1,102 +1,34 @@
 <form method="post" id="form1" action="/">
-    <input class="btn btn-default submit" type="submit" value="SOLVE!" form="form1">
-    <table class="table table-striped table-bordered table-condensed">
-        <tr>
-            <th>Z</th>
-            <th>q(t)</th>
-            <th>q(t+1)</th>
-        </tr>
-        <tr>
-            <td>0</td>
-            <td>0</td>
-            <td>{{ form.move_0_0(maxlength=1) }}</td>
-        </tr>
-        <tr>
-            <td>0</td>
-            <td>1</td>
-            <td>{{ form.move_0_1(maxlength=1) }}</td>
-        </tr>
-        <tr>
-            <td>0</td>
-            <td>2</td>
-            <td>{{ form.move_0_2(maxlength=1) }}</td>
-        </tr>
-        <tr>
-            <td>0</td>
-            <td>3</td>
-            <td>{{ form.move_0_3(maxlength=1) }}</td>
-        </tr>
-        <tr>
-            <td>0</td>
-            <td>4</td>
-            <td>{{ form.move_0_4(maxlength=1) }}</td>
-        </tr>
-        <tr>
-            <td>0</td>
-            <td>5</td>
-            <td>{{ form.move_0_5(maxlength=1) }}</td>
-        </tr>
-        <tr>
-            <td>0</td>
-            <td>6</td>
-            <td>{{ form.move_0_6(maxlength=1) }}</td>
-        </tr>
-        <tr>
-            <td>0</td>
-            <td>7</td>
-            <td>{{ form.move_0_7(maxlength=1) }}</td>
-        </tr>
-    </table>
+    <label>Czy jest sygnał Z?<input type="checkbox" id="is_z"></label>
+    <br>
+    <label>Ile jest stanów?<input type="number" id="inp" min="4" max="16" step="1" value="4" maxlength="2"/></label>
+    <br>
+    <label>Jaki typ przerzutnika?
+        {%- for subfield in form.ff_type -%}
+            {{ subfield }} {{ subfield.label }}
+        {% endfor %}
+    </label>
 
-    <table class="table table-striped table-bordered table-condensed">
-        <tr>
-            <th>Z</th>
-            <th>q(t)</th>
-            <th>q(t+1)</th>
-        </tr>
-        <tr>
-            <td>1</td>
-            <td>0</td>
-            <td>{{ form.move_1_0(maxlength=1) }}</td>
-        </tr>
-        <tr>
-            <td>1</td>
-            <td>1</td>
-            <td>{{ form.move_1_1(maxlength=1) }}</td>
-        </tr>
-        <tr>
-            <td>1</td>
-            <td>2</td>
-            <td>{{ form.move_1_2(maxlength=1) }}</td>
-        </tr>
-        <tr>
-            <td>1</td>
-            <td>3</td>
-            <td>{{ form.move_1_3(maxlength=1) }}</td>
-        </tr>
-        <tr>
-            <td>1</td>
-            <td>4</td>
-            <td>{{ form.move_1_4(maxlength=1) }}</td>
-        </tr>
-        <tr>
-            <td>1</td>
-            <td>5</td>
-            <td>{{ form.move_1_5(maxlength=1) }}</td>
-        </tr>
-        <tr>
-            <td>1</td>
-            <td>6</td>
-            <td>{{ form.move_1_6(maxlength=1) }}</td>
-        </tr>
-        <tr>
-            <td>1</td>
-            <td>7</td>
-            <td>{{ form.move_1_7(maxlength=1) }}</td>
-        </tr>
-    </table>
-    {% for subfield in form.ff_type %}
-        {{ subfield }} {{ subfield.label }}
+    <input class="btn btn-default submit" type="submit" value="SOLVE!" form="form1">
+
+    {% for i in range(2) %}
+        <table class="hidden table{{ i }} table table-striped table-bordered table-condensed">
+            <tr>
+                <th class="hidden table1">Z</th>
+                <th>q(t)</th>
+                <th>q(t+1)</th>
+            </tr>
+            {% for j in range(16) %}
+                <tr class="hidden" id="{{ i }}_{{ j }}">
+                    <td class="hidden table1">{{ i }}</td>
+                    <td>{{ j }}</td>
+                    <td>{{ form.get_field(i, j) }}</td>
+                </tr>
+            {% endfor %}
+        </table>
     {% endfor %}
+
+    <div style="clear:both"></div>
+
     <input class="btn btn-default submit" type="submit" value="SOLVE!" form="form1">
 </form>

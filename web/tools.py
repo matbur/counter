@@ -22,7 +22,7 @@ def is_valid(data):
     values = data.values()
 
     def is_item_valid(item):
-        return not item or item in map(str, range(8))
+        return not item or item in map(str, range(16))
 
     return all(is_item_valid(i) for i in values)
 
@@ -52,6 +52,9 @@ def parse_form(data):
             continue
         parsed_key = parse_key(key) + [value]
         parsed.append(tuple(int(i) for i in parsed_key))
+
+    if len(parsed[0]) == 3 and not any(i[0] for i in parsed):
+        return [i[1:] for i in parsed]
     return parsed
 
 

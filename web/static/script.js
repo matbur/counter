@@ -1,86 +1,82 @@
 /**
- * Created by matbur on 08.12.16.
+ * Created by matbur on 10.12.16.
  */
-var tab, slider, n, slider_v;
 
+var inp = $('#inp');
+const hidden = 'hidden';
+const max_move = 16;
+var tab = [[], []];
+var is_z = $('#is_z');
 
-function setup() {
-    createCanvas(400, 400);
-    n = 4;
-    slider = createSlider(2, 10, n, 1);
-    slider_v = n - 1;
-    // slider.position(0, 0);
-    tab = [];
+for (let i = 0; i < max_move; i++) {
+    tab[0][i] = $('#0_' + i);
+    tab[1][i] = $('#1_' + i);
 }
 
-function draw() {
-    n = slider.value();
-    if (n != slider_v) {
-        console.log("v");
-        slider_v = n;
-        clear();
-        tab = [];
-        for (let i = 0; i < n; i++) {
-            tab.push(new Circle(i, ...n_circle(i, n)));
+$('.table0').removeClass(hidden);
+var table1 = $('.table1');
+is_z.change(function () {
+    table1.toggleClass(hidden, !this.checked);
+    if (!this.checked) {
+        for (let i = 0; i < max_move; i++) {
+            let c = tab[1][i].find("td:eq(2)");
+            let content = c.html();
+            c.html(content.replace(/value="\d+"/, 'value=""'));
         }
     }
-    for (let i of tab) {
-        i.update();
-        i.draw();
-    }
-}
+});
 
-class Circle {
-    constructor(i, x, y, r = 20) {
-        this.num = i;
-        this.x = x;
-        this.y = y;
-        this.radius = r;
-        this.diameter = 2 * r;
-        this.left = x - r;
-        this.right = x + r;
-        this.top = y - r;
-        this.bottom = y + r;
-        this.over = false;
-        this.pressed = false;
+var previous = 4;
+inp.change(function () {
+    let val = this.value;
+    if (val < previous) {
+        for (let i = val; i < max_move; i++) {
+            let c = tab[0][i].find("td:eq(2)");
+            let content = c.html();
+            c.html(content.replace(/value="\d+"/, 'value=""'));
 
-    }
-
-    draw() {
-        ellipse(this.x, this.y, this.diameter);
-        fill(0);
-        text(this.num, this.x - 3, this.y + 4);
-    }
-
-    isMouseOver() {
-        this.over = mouseX > this.left &&
-            mouseX < this.right &&
-            mouseY > this.top &&
-            mouseY < this.bottom;
-    }
-
-    isPressed() {
-        if (this.over && mouseIsPressed) {
-            this.pressed = true;
-        } else if (!mouseIsPressed) {
-            this.pressed = false;
+            c = tab[1][i].find("td:eq(2)");
+            content = c.html();
+            c.html(content.replace(/value="\d+"/, 'value=""'));
+        }
+        }
+    let val_z0 = 0;
+    for (let i = 0; i < max_move; i++) {
+        let c = tab[0][i].find("td:eq(2)");
+        let is_not_null = /value=.(\d+)./.exec(c.html()) !== null;
+        if (is_not_null && i + 1 > val_z0) {
+            val_z0 = i + 1;
         }
     }
-
-    update() {
-        this.isMouseOver();
-        this.isPressed();
-        if (this.over || this.pressed) {
-            fill(128);
-        } else {
-            fill(255);
+    let val_z1 = 0;
+    for (let i = 0; i < max_move; i++) {
+        let c = tab[1][i].find("td:eq(2)");
+        let is_not_null = /value=.(\d+)./.exec(c.html()) !== null;
+        if (is_not_null && i + 1 > val_z1) {
+            val_z1 = i + 1;
         }
     }
-}
+    if (val_z1 !== 0 && table1.hasClass(hidden)) {
+        is_z.trigger('click');
+    }
+    let max = Math.max(val_z0, val_z1);
+    if (max > val) {
+        val = max;
+        this.value = max;
+    }
 
-function n_circle(i, n) {
-    const p = 200;
-    const r = 150;
-    let alpha = 2 * PI * i / n;
-    return [p - r * cos(alpha), p + r * sin(alpha)];
+    for (let i = 0; i < val; i++) {
+        tab[0][i].removeClass(hidden);
+        tab[1][i].removeClass(hidden);
+        }
+    for (let i = val; i < max_move; i++) {
+        tab[0][i].addClass(hidden);
+        tab[1][i].addClass(hidden);
+    }
+    previous = val;
+    }
+);
+
+if (inp.value === undefined) {
+    inp.trigger('change');
 }
