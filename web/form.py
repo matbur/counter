@@ -7,7 +7,7 @@ class MovesForm(Form):
 
     def get_field(self, x, y):
         field = 'move_{}_{}'.format(x, y)
-        return vars(self)[field]
+        return vars(self)[field](maxlength=2)
 
 
 for i in range(2):
