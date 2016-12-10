@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <title>matbur's minimalizer</title>
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
-    <link rel="stylesheet" href="{{ url_for('static',  filename='css/normalize.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static',  filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ url_for('static',  filename='css/style.css') }}">
-    <script language="javascript" src="{{ url_for('static', filename='libraries/jquery-3.1.1.min.js') }}"></script>
+    <script language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
@@ -72,7 +72,7 @@
 
 {% include 'corner.html' %}
 
-<script language="javascript" src="{{ url_for('static', filename='script.js') }}"></script>
+<script language="javascript" src="{{ url_for('static', filename='js/script.js') }}"></script>
 
 </body>
 </html>
