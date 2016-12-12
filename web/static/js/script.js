@@ -2,11 +2,14 @@
  * Created by matbur on 10.12.16.
  */
 
-var inp = $('#inp');
+var num = $('#num');
+var num_val = $('#num_val');
 const hidden = 'hidden';
 const max_move = 16;
 var tab = [[], []];
 var is_z = $('#is_z');
+var value_pattern = /value="\d+"/;
+var empty_value = 'value=""';
 
 for (let i = 0; i < max_move; i++) {
     tab[0][i] = $('#0_' + i);
@@ -21,25 +24,28 @@ is_z.change(function () {
         for (let i = 0; i < max_move; i++) {
             let c = tab[1][i].find("td:eq(2)");
             let content = c.html();
-            c.html(content.replace(/value="\d+"/, 'value=""'));
+            c.html(content.replace(value_pattern, empty_value));
         }
     }
 });
 
-var previous = 4;
-inp.change(function () {
+var previous = 0;
+num.change(function () {
     let val = this.value;
+    console.log(num_val.html());
+    num_val.html(val);
+    console.log(typeof  num_val.html());
     if (val < previous) {
         for (let i = val; i < max_move; i++) {
             let c = tab[0][i].find("td:eq(2)");
             let content = c.html();
-            c.html(content.replace(/value="\d+"/, 'value=""'));
+            c.html(content.replace(value_pattern, empty_value));
 
             c = tab[1][i].find("td:eq(2)");
             content = c.html();
-            c.html(content.replace(/value="\d+"/, 'value=""'));
+            c.html(content.replace(value_pattern, empty_value));
         }
-        }
+    }
     let val_z0 = 0;
     for (let i = 0; i < max_move; i++) {
         let c = tab[0][i].find("td:eq(2)");
@@ -68,15 +74,19 @@ inp.change(function () {
     for (let i = 0; i < val; i++) {
         tab[0][i].removeClass(hidden);
         tab[1][i].removeClass(hidden);
-        }
+    }
     for (let i = val; i < max_move; i++) {
         tab[0][i].addClass(hidden);
         tab[1][i].addClass(hidden);
     }
     previous = val;
-    }
-);
+});
 
-if (inp.value === undefined) {
-    inp.trigger('change');
+if (num.value === undefined) {
+    num.trigger('change');
 }
+
+if (num_val.html() === '4') {
+    num.trigger('change');
+}
+

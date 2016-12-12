@@ -11,9 +11,10 @@ h1 {
     float: left;
     width: calc(50% - 10px);
     margin-left: 20px;
+    margin-top: 10px;
 }
 
-input + .table {
+.table0 {
     margin-left: 0;
 }
 
@@ -24,17 +25,41 @@ th, td {
 }
 
 td > input {
-    text-align: center;
-    width: 40px;
+    width: 50px;
 }
 
-input.submit {
+#solve {
     width: 100%;
     margin: 0 0 10px;
 }
 
-#inp {
-    width: 50px;
+#is_z {
+    margin: 0 10px;
+}
+
+#num_val {
+    margin: 0 10px;
+}
+
+#num {
+    display: inline;
+    width: 100px;
+    margin: 0 10px;
+}
+
+#ff_type {
+    display: inline;
+    /*margin: 0 10px;*/
+    padding: 0 10px;
+}
+
+#ff_type > li {
+    display: inline;
+    margin: 0 5px;
+}
+
+#ff_type > li > input {
+    width: 20px;
 }
 
 .jumbotron {

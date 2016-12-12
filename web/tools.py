@@ -18,17 +18,26 @@ def get_time():
     return '?{}'.format(time())
 
 
+def remove_items(data):
+    items = 'num', 'is_z', 'solve'
+    [data.pop(i) for i in items]
+
+
+def pop_ff(data):
+    return data.pop('ff_type')
+
+
 def is_valid(data):
     values = data.values()
 
     def is_item_valid(item):
-        return not item or item in map(str, range(16))
+        return item is None or item in range(16)
 
     return all(is_item_valid(i) for i in values)
 
 
 def is_empty(data):
-    return not any(data.values())
+    return all(i is None for i in data.values())
 
 
 def decide(data, ff_type, ip):

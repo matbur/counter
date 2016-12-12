@@ -1,7 +1,7 @@
 from flask import Flask, make_response, render_template, request
 
 from form import MovesForm
-from tools import decide, get_time, random_filename
+from tools import decide, get_time, pop_ff, random_filename, remove_items
 
 app = Flask(__name__)
 app.secret_key = 'very secret key'
@@ -24,7 +24,8 @@ def index():
     filename = 'static/generated/' + filename
     if request.method == 'POST':
         data = form.data
-        ff_type = data.pop('ff_type')
+        ff_type = pop_ff(data)
+        remove_items(data)
         err = decide(data, ff_type, filename)
         if err is not None:
             return err

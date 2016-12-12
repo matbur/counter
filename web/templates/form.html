@@ -1,15 +1,9 @@
 <form method="post" id="form1" action="/">
-    <label>Czy jest sygnał Z?<input type="checkbox" id="is_z"></label>
+    {{ form.is_z.label }}{{ form.is_z }}
     <br>
-    <label>Ile jest stanów?<input type="number" id="inp" min="4" max="16" step="1" value="4" maxlength="2"/></label>
+    {{ form.num.label }} <span id="num_val"></span>{{ form.num(min=4, max=16, value=4) }}
     <br>
-    <label>Jaki typ przerzutnika?
-        {%- for subfield in form.ff_type -%}
-            {{ subfield }} {{ subfield.label }}
-        {% endfor %}
-    </label>
-
-    <input class="btn btn-default submit" type="submit" value="SOLVE!" form="form1">
+    {{ form.ff_type.label }}{{ form.ff_type }}
 
     {% for i in range(2) %}
         <table class="hidden table{{ i }} table table-striped table-bordered table-condensed">
@@ -30,5 +24,5 @@
 
     <div style="clear:both"></div>
 
-    <input class="btn btn-default submit" type="submit" value="SOLVE!" form="form1">
+    {{ form.solve(class='btn btn-default ') }}
 </form>
