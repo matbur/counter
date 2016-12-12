@@ -12,20 +12,22 @@ def index():
     form = MovesForm(request.form)
     fields = {'form': form, 'ts': get_time()}
     resp = make_response(render_template('index.html', **fields))
+
+    # resp.set_cookie('file', expires=0)
     filename = request.cookies.get('file')
 
     print(request.remote_addr, filename)
     if filename is None:
         filename = random_filename()
         resp.set_cookie('file', filename)
-        # return resp
 
     filename = 'static/generated/' + filename
-
-    if request.method == 'POST' and form.validate():
+    if request.method == 'POST':
         data = form.data
         ff_type = data.pop('ff_type')
-        decide(data, ff_type, filename)
+        err = decide(data, ff_type, filename)
+        if err is not None:
+            return err
 
     return resp
 

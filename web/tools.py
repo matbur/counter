@@ -4,7 +4,7 @@ import string
 import sys
 from time import time
 
-from flask import flash
+from flask import flash, redirect, url_for
 
 sys.path.append(os.path.dirname(__file__) + '/..')
 from latex import create_jpg_file, create_pdf_file, create_tex_file
@@ -33,10 +33,14 @@ def is_empty(data):
 
 def decide(data, ff_type, ip):
     if is_empty(data):
-        return flash('Tabela jest pusta!', category='warning')
+        print('empty table')
+        flash('Tabela jest pusta!', category='warning')
+        return redirect(url_for('index'))
 
     if not is_valid(data):
-        return flash('Podano złe przejście!', category='warning')
+        print('bad move')
+        flash('Podano złe przejście!', category='warning')
+        return redirect(url_for('index'))
 
     create_files(data, ff_type, ip)
 

@@ -165,6 +165,10 @@ def gen_tex_file_content(moves, f_f):
     full_moves = complete_moves(moves, width)
     c_num = min((width + is_z) // 2, 2)
 
+    print(f_f)
+    print(set(used_moves))
+    print(sorted(moves))
+
     return Document((
         '',
         subsection('Zakodowane wejsc, wyjsc i stanow wewnetrznych'),
