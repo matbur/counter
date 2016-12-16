@@ -27,7 +27,7 @@ def pop_ff(data):
     return data.pop('ff_type')
 
 
-def is_valid(data):
+def all_is_valid(data):
     values = data.values()
 
     def is_item_valid(item):
@@ -36,17 +36,17 @@ def is_valid(data):
     return all(is_item_valid(i) for i in values)
 
 
-def is_empty(data):
-    return all(i is None for i in data.values())
+def are_minimal_moves(data):
+    return sum(i is not None for i in data.values()) >= 4
 
 
 def decide(data, ff_type, ip):
-    if is_empty(data):
-        print('empty table')
-        flash('Tabela jest pusta!', category='warning')
+    if not are_minimal_moves(data):
+        print('to little moves')
+        flash('Podano za mało stanów!', category='warning')
         return redirect(url_for('index'))
 
-    if not is_valid(data):
+    if not all_is_valid(data):
         print('bad move')
         flash('Podano złe przejście!', category='warning')
         return redirect(url_for('index'))
@@ -61,7 +61,7 @@ def parse_key(key):
 def parse_form(data):
     parsed = []
     for key, value in data.items():
-        if not value:
+        if value is None:
             continue
         parsed_key = parse_key(key) + [value]
         parsed.append(tuple(int(i) for i in parsed_key))
