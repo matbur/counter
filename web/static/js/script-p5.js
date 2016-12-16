@@ -2,10 +2,12 @@
  * Created by matbur on 08.12.16.
  */
 var tab, slider, n, slider_v;
-
+const side = 600;
+const center = side / 2;
+const radius = side * .45;
 
 function setup() {
-    createCanvas(400, 400);
+    createCanvas(side, side);
     n = 4;
     slider = createSlider(2, 10, n, 1);
     slider_v = n - 1;
@@ -79,8 +81,10 @@ class Circle {
 }
 
 function n_circle(i, n) {
-    const p = 200;
-    const r = 150;
     let alpha = 2 * PI * i / n;
-    return [p - r * cos(alpha), p + r * sin(alpha)];
+    return [center - radius * cos(alpha), center + radius * sin(alpha)];
+}
+
+function Arc() {
+
 }
