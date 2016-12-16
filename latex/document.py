@@ -4,7 +4,7 @@
 
 class Document:
     __begin = '\n'.join((r'\documentclass[11pt]{article}',
-                         r'\usepackage[margin=1in]{geometry}',
+                         r'\usepackage[margin=.5in]{geometry}',
                          r'\begin{document}'
                          ))
     __footer = r'\end{document}'
