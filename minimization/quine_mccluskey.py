@@ -107,9 +107,12 @@ class QuineMcCluskey:
                 for mint2 in group2:
                     if not are_similar(mint1, mint2):
                         continue
-                    minterms.append(merge(mint1, mint2))
                     used.add(mint1)
                     used.add(mint2)
+
+                    merged = merge(mint1, mint2)
+                    if merged not in minterms:
+                        minterms.append(merged)
 
         self.__used = used
         self.__flattened = minterms
