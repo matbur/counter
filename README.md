@@ -1,6 +1,6 @@
 # Auto latex generator for counters
 
-##Usage:
+## Usage:
 1. Test if you have necessary packages:
   ```
   $ which pdflatex
