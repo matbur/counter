@@ -41,7 +41,9 @@ def get_file(ext):
 
 
 if __name__ == '__main__':
+    import sys
     app.run(
         host='0.0.0.0',
+        port=int(sys.argv[1]),
         debug=True
     )
