@@ -171,7 +171,7 @@ def gen_tex_file_content(moves, f_f):
 
     return Document((
         '',
-        subsection('Zakodowane wejsc, wyjsc i stanow wewnetrznych'),
+        subsection('Zakodowane wejscia, wyjscia i stany wewnetrzne'),
         minipage((
             gen_input_table(),
         ), 3),
