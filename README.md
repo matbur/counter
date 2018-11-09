@@ -1,6 +1,14 @@
 # Auto latex generator for counters
 
-## Usage:
+## Usage in docker:
+1. Run in terminal:
+```bash
+docker run --rm -it -p 5000:5000 matbur/counter
+```
+1. Visit site: `0.0.0.0:5000` in your browser.
+1. Enjoy :)
+
+## Usage local:
 1. Test if you have necessary packages:
    ```bash
    $ which pdflatex
